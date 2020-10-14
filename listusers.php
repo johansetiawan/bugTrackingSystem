@@ -1,5 +1,5 @@
 ﻿			<?php 
-					$title="Listes des produits";
+					$title="user list";
 					include('include/head.php'); 
 					 
 			?>

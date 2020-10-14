@@ -13,21 +13,21 @@
         if (!empty($loguser) && !empty($passuser)) {
               
 
-              $reqnumlogin = "SELECT count(ID) FROM abonne WHERE LOGIN LIKE '".$_POST['login']."'";
+              $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$_POST['login']."'";
               $result = $base->query($reqnumlogin);  
               $numLOGIN = $result->fetch_row(); 
   
               if ($numLOGIN['0'] == 1) {
 
-                  $findpass = "SELECT `PASSWORD` FROM `abonne` WHERE `LOGIN` LIKE '".$_POST['login']."'";
-                  $realpass = $base->query($findpass)->fetch_object()->PASSWORD;  
-                  $userpass = md5($_POST['password']);
+                  $findpass = "SELECT `password` FROM `user` WHERE `email` LIKE '".$_POST['login']."'";
+                  $realpass = $base->query($findpass)->fetch_object()->password;  
+                  $userpass = $_POST['password'];
                   if ($userpass == $realpass) {
 
-                        $data = "SELECT * FROM `abonne` WHERE `LOGIN` LIKE '".$_POST['login']."'";
+                        $data = "SELECT * FROM `user` WHERE `email` LIKE '".$_POST['login']."'";
                         $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
                         $_SESSION['user'] = $datauser;
-                        if ($_SESSION['user']['ROLE'] == "1") {
+                        if ($_SESSION['user']['user_type'] == "Reporter") {
                             header('Location: admin.php');
                         }else{
                             header('Location: user.php');

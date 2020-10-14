@@ -1,5 +1,5 @@
 ﻿      <?php 
-          $title="Modifier votre profil";
+          $title="edit profile";
           include('include/head.php'); 
       ?>
 

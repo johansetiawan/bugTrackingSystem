@@ -1,5 +1,5 @@
 ﻿			<?php 
-					$title="Listes des produits";
+					$title="Bug List";
 					include('include/head.php'); 
 					 
 			?>

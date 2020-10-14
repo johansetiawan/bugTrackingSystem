@@ -1,5 +1,5 @@
 ﻿			<?php 
-					$title="Ajouter des produits";
+					$title="add bug";
 					include('include/head.php'); 
 					 
 			?>
