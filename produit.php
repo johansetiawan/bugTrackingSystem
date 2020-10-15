@@ -2,7 +2,7 @@
                      include('config.php');  
                     if (isset($_GET['num'])) {
                         $idproduit = $_GET['num'];
-                        $data = "SELECT * FROM `produit` WHERE `id` LIKE '".$idproduit."'";
+                        $data = "SELECT * FROM `bug` WHERE `bug_id` LIKE '".$idproduit."'";
                         $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
                         if (empty($dataproduit)) {
                            header('Location: list_produit.php');

@@ -5,10 +5,10 @@
 
                                 if (isset($_GET['id'])) {
                                     $iduser= $_GET['id'];
-                                    $data = "SELECT * FROM `abonne` WHERE `ID` LIKE '".$iduser."'";
+                                    $data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$iduser."'";
                                     $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
                                     if ((!empty($datauser))&&($datauser['ROLE'] != "1")) {
-                                         $base->query("DELETE FROM abonne WHERE ID=".$iduser."");
+                                         $base->query("DELETE FROM user WHERE user_id=".$iduser."");
                                         } 
                                        header('Location: listusers.php'); 
                                 }else{
