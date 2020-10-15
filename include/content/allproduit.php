@@ -7,10 +7,10 @@
 <?php  while($produit = $produits->fetch_array()) {?>   
 		<div class="plist">
 			<?php  if (isset($_SESSION['user'])) {
-					if ($_SESSION['user']['user_type'] == "1") { ?> 
+					if ($_SESSION['user']['user_type'] == "Triager") { ?> 
 			<div class="paneloption">
-				<a href="delete_produit.php?num=<?php echo $produit['id'];?>" class="delete"><i class="ion ion-trash-a"></i></a>
-				<a href="editproduit.php?num=<?php echo $produit['id'];?>" class="edit"><i class="ion ion-edit"></i></a>
+				<a href="delete_produit.php?num=<?php echo $produit['bug_id'];?>" class="delete"><i class="ion ion-trash-a"></i></a>
+				<a href="editproduit.php?num=<?php echo $produit['bug_id'];?>" class="edit"><i class="ion ion-edit"></i></a>
 			</div>
 			<?php } } ?>
 			<a href="produit.php?num=<?php echo $produit['bug_id'];?>"><h3><?php echo $produit['title']; ?></h3></a>

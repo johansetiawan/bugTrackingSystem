@@ -1,8 +1,8 @@
 <?php
 	if (isset($_SESSION['user'])) {
-        if ($_SESSION['user']['ROLE'] == "1") {
+        if ($_SESSION['user']['ROLE'] == "Reporter") {
           
-		    $allusers = "SELECT * FROM `abonne`";
+		    $allusers = "SELECT * FROM `user`";
 		    $users = $base->query($allusers); 
 
         }else{
@@ -18,10 +18,9 @@
 		      <thead>
 		        <tr>
 		          <th>#</th>
-		          <th>Avatar</th>
 		          <th>Name</th>
 		          <th>E-mail</th>
-		          <th>Login</th>
+		          <th>Role</th>
 		          <th></th>
 		        </tr>
 		      </thead>
@@ -29,21 +28,19 @@
 <?php  while($user = $users->fetch_array()) {?>
 		<?php if ($user['ROLE'] == "1") { ?>
 		        <tr>
-		          <td><?php echo $user['ID'];?></td>
-		          <td><img src="<?php echo $user['AVATAR'];?>"></td>
-		          <td><?php echo $user['LAST_NAME']." ".$user['FIRST_NAME']; ?></td>
+		          <td><?php echo $user['user_id'];?></td>
+		          <td><?php echo $user['full_name']; ?></td>
 		          <td><?php echo $user['E_MAIL'];?></td>
-		          <td><?php echo $user['LOGIN'];?></td>
+		          <td><?php echo $user['user_type'];?></td>
 		          <td><a href="admin.php" class="option"><i class="ion ion-person"></i></a></td>
 		        </tr> 
 		<?php }else{?>
 		        <tr>
-		          <td><?php echo $user['ID'];?></td>
-		          <td><img src="<?php echo $user['AVATAR'];?>"></td>
-		          <td><?php echo $user['LAST_NAME']." ".$user['FIRST_NAME']; ?></td>
+		          <td><?php echo $user['user_id'];?></td>
+		          <td><?php echo $user['full_name']; ?></td>
 		          <td><?php echo $user['E_MAIL'];?></td>
-		          <td><?php echo $user['LOGIN'];?></td>
-		          <td><a href="delete_user.php?id=<?php echo $user['ID'];?>" class="delete"><i class="ion ion-trash-a"></i></a></td>
+		          <td><?php echo $user['user_type'];?></td>
+		          <td><a href="delete_user.php?id=<?php echo $user['user_id'];?>" class="delete"><i class="ion ion-trash-a"></i></a></td>
 		        </tr>  
 <?php }}?>
 		      </tbody>

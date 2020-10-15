@@ -1,7 +1,8 @@
 
     	</div>
-    	<div class="foot">
-			© 2020 Roger Bug Tracker
-    	</div>
+    		<div class="foot">
+    			
+    		</div>
+    	
     </body>
 </html>

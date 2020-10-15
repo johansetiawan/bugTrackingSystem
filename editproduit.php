@@ -2,7 +2,7 @@
                      include('config.php');  
                     if (isset($_GET['num'])) {
                         $idproduit = $_GET['num'];
-                        $data = "SELECT * FROM `produit` WHERE `id` LIKE '".$idproduit."'";
+                        $data = "SELECT * FROM `bug` WHERE `bug_id` LIKE '".$idproduit."'";
                         $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
                         if (empty($dataproduit)) {
                            header('Location: list_produit.php');
@@ -19,7 +19,7 @@
         <link href="<?php echo $design; ?>/style.css" rel="stylesheet" title="Style" />
         <script type="text/javascript" src="<?php echo $design; ?>/script.js"></script> 
         <link rel="stylesheet" type="text/css" media="screen" href="<?php echo $design; ?>/ion/css/ionicons.min.css"> 
-        <title>Modifier <?php echo $dataproduit['nom'];?></title>
+        <title>Modifier <?php echo $dataproduit['title'];?></title>
     </head>
     <body>
         <div class="header">

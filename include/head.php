@@ -12,11 +12,11 @@ include('config.php');
         <link rel="shortcut icon" href="<?php echo $design; ?>/img/logo.ico" type="image/x-icon">
         <title><?php echo $title;?></title>
     </head>
-	<body>
-	<div class="header">
-        <a href="<?php echo $url_home; ?>">
-            <!--<img class="logo2 lpic" src="<?php echo $design; ?>/img/logo1.png" />-->
-            <img class="logo2" src="<?php echo $design; ?>/img/logo2.png" />
-        </a>
-	</div>
-    <div class="body">
+    <body>
+		<div class="header">
+        	<a href="<?php echo $url_home; ?>">
+                <img class="logo2 lpic" src="<?php echo $design; ?>/img/logo1.png" />
+                <img class="logo2" src="<?php echo $design; ?>/img/logo2.png" />
+            </a>
+	    </div>
+    	<div class="body">
