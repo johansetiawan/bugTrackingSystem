@@ -1,6 +1,6 @@
 <?php
 	if (isset($_SESSION['user'])) {
-        if ($_SESSION['user']['ROLE'] == "Reporter") {
+        if ($_SESSION['user']['user_type'] != "") {
           
 		    $allusers = "SELECT * FROM `user`";
 		    $users = $base->query($allusers); 
@@ -26,13 +26,14 @@
 		      </thead>
 		      <tbody>
 <?php  while($user = $users->fetch_array()) {?>
-		<?php if ($user['ROLE'] == "1") { ?>
+		<?php if ($user['user_type'] != "") { ?>
 		        <tr>
 		          <td><?php echo $user['user_id'];?></td>
 		          <td><?php echo $user['full_name']; ?></td>
-		          <td><?php echo $user['E_MAIL'];?></td>
+		          <td><?php echo $user['email'];?></td>
 		          <td><?php echo $user['user_type'];?></td>
 		          <td><a href="admin.php" class="option"><i class="ion ion-person"></i></a></td>
+                <td><a href="delete_user.php?id=<?php echo $user['user_id'];?>" class="delete"><i class="ion ion-trash-a"></i></a></td>
 		        </tr> 
 		<?php }else{?>
 		        <tr>
