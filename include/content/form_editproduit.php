@@ -21,11 +21,11 @@
               //echo $_POST['descproduit'].'<hr>'.$descproduit;
               //die();
           if ($_SESSION['user']['user_type'] == "Triager"){
-              $editpro = "UPDATE bug SET status='".$stat."',developer_id='".$devid."', triager_id ='".$_SESSION['user']['user_id']."' WHERE bug_id=".$dataproduit['bug_id']."";
+              $editpro = "UPDATE bug_report SET status='".$stat."',developer_id='".$devid."', triager_id ='".$_SESSION['user']['user_id']."' WHERE bug_id=".$dataproduit['bug_id']."";
           }
           else
           {
-              $editpro = "UPDATE bug SET status='".$stat."' WHERE bug_id=".$dataproduit['bug_id']."";
+              $editpro = "UPDATE bug_report SET status='".$stat."' WHERE bug_id=".$dataproduit['bug_id']."";
           }
               
               $rq = mysqli_query($base,$editpro);

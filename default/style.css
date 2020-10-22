@@ -8,23 +8,23 @@
 /** **/
 @keyframes animatedBackground {
 	0% { background-position: 0 0; }
-	100% { background-position: -300px 0; }
+	100% { background-position: -560px 0; }
 }
 @-moz-keyframes animatedBackground {
 	0% { background-position: 0 0; }
-	100% { background-position: -300px 0; }
+	100% { background-position: -560px 0; }
 }
 @-webkit-keyframes animatedBackground {
 	0% { background-position: 0 0; }
-	100% { background-position: -300px 0; }
+	100% { background-position: -560px 0; }
 }
 @-ms-keyframes animatedBackground {
 	0% { background-position: 0 0; }
-	100% { background-position: -300px 0; }
+	100% { background-position: -560px 0; }
 }
 @-o-keyframes animatedBackground {
 	0% { background-position: 0 0; }
-	100% { background-position: -300px 0; }
+	100% { background-position: -560px 0; }
 }
  
 html { 
@@ -35,17 +35,18 @@ html {
 	background-repeat: no-repeat;
 	background-color: #C0DEED;
  
-	animation: animatedBackground 20s linear infinite;
-	-moz-animation: animatedBackground 20s linear infinite;
-	-webkit-animation: animatedBackground 20s linear infinite;
-	-ms-animation: animatedBackground 20s linear infinite;
-	-o-animation: animatedBackground 20s linear infinite;
+	animation: animatedBackground 10s linear infinite;
+	-moz-animation: animatedBackground 10s linear infinite;
+	-webkit-animation: animatedBackground 10s linear infinite;
+	-ms-animation: animatedBackground 10s linear infinite;
+	-o-animation: animatedBackground 10s linear infinite;
 }
 /** **/
 body
 {
-	padding-left:10%;
-	padding-right:10%;
+	padding-top:0%;
+	padding-left:0%;
+	padding-right:0%;
 	font-family:Arial, Geneva, sans-serif;
 } 
 a
@@ -73,8 +74,8 @@ h1
 	height: 100px;
 } 
 .logo2{
-	width: 100px;
-	height: 100px;
+	width: 185px;
+	height: 60px;
 }
 .lpic{
     -webkit-transition: 10s ;
@@ -141,32 +142,43 @@ td, th
 /****Blocs****/
 .header
 {
-	margin:auto;
-	margin-top:10px;
-	padding:15px;
-	background:url('images/bluec_30p.png');
-	width:70%;
-	-moz-border-radius:20px;
-	-webkit-border-radius:20px;
-	border-radius:20px;
-	text-align:center;
+	height:60px;
+	width:100%;
+	top: 0px;
+	left: 0px;
+	position: fixed;
+	margin:0px;
+	padding:0px;
+	background-color: rgba(125,185,215,1);
+	text-align:left;
+	border: 5px rgba(120,180,220, 1);
+	border-style: solid;
 }
 .foot
 {
-	text-align:center;
-	background:url('images/bluec_30p.png');
-	width:60%;
-	-moz-border-radius:15px;
-	-webkit-border-radius:15px;
-	border-radius:15px;
-	margin:auto;
-	padding:10px;
-	margin-top:20px;
+	width:100%;
+	height:15px;
+	background-color: rgba(125,185,215,1);
+	border: 5px rgba(120,180,220, 1);
+	border-style: solid;
+	margin:0px;
+	position: fixed;
+	bottom: 0px;
+	padding:0px;
 }
 .body{
+    margin: auto;
+	margin-top: 150px;
 	padding: 10px;
-	float: left;
-	width: 100%;
+    margin-bottom: 3%;
+
+	background-color: rgba(195,230,245, 1);
+	border: 5px rgba(120,180,220, 1);
+	border-style: solid double;
+	width: 95%;
+	height: 95%;
+	min-width: 700px;
+	vertical-align: top;
 }
 .content
 {

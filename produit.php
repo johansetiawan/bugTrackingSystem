@@ -2,7 +2,7 @@
                      include('config.php');  
                     if (isset($_GET['num'])) {
                         $idproduit = $_GET['num'];
-                        $data = "SELECT * FROM `bug` WHERE `bug_id` LIKE '".$idproduit."'";
+                        $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
                         $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
                         if (empty($dataproduit)) {
                            header('Location: list_produit.php');
@@ -23,7 +23,7 @@
     </head>
     <body>
         <div class="header">
-            <a href="<?php echo $url_home; ?>"><img class="logo" src="<?php echo $design; ?>/img/logo.png" alt="Espace Membre" /></a>
+            <a href="<?php echo $url_home; ?>"><img class="logo" src="<?php echo $design; ?>/img/logo.png" alt="" /></a>
         </div>
         <div class="body">
     		<div class="divleft"></div>

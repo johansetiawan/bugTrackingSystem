@@ -16,12 +16,12 @@
               $reporterid = $_SESSION['user']['user_id'];
               $nomproduit = mysqli_real_escape_string($base,$_POST['nomproduit']);
               $descproduit = mysqli_real_escape_string($base,nl2br($_POST['descproduit']));
-              $feature = mysqli_real_escape_string($base,nl2br($_POST['feature']));
+              $feature = mysqli_real_escape_string($base,nl2br($_POST['keyword']));
               $versiono = mysqli_real_escape_string($base,nl2br($_POST['versiono']));
               $priority = mysqli_real_escape_string($base,nl2br($_POST['priority']));
 
 
-              $addpro = "INSERT INTO `bug` (`reporter_id`, `title`,`description`,`feature`,`version_no`,`priority`) VALUES ('$reporterid','$nomproduit','$descproduit','$feature','$versiono','$priority')";
+              $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`feature`,`version_no`,`priority`) VALUES ('$reporterid','$nomproduit','$descproduit','$feature','$versiono','$priority')";
               $rq = mysqli_query($base,$addpro);
             die("<p class='alert success'>.$addpro Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
         }else{
@@ -40,8 +40,12 @@
           <td colspan="3"><textarea  name="descproduit" ></textarea></td>
         </tr>
         <tr>
-          <td colspan="2">feature : </td>
-          <td colspan="2"><input type="text" name="feature" placeholder="feature"></input></td>
+          <td colspan="2">keyword : </td>
+          <td><select id="keyword" name="keyword">
+            <option value="title">C++</option>
+            <option value="developer">Java</option>
+            <option value="status">Python</option>
+            </select></td>
         </tr>
         <tr>
           <td colspan="2">version_no : </td>
