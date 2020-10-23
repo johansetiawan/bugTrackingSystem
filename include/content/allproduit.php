@@ -15,7 +15,21 @@ include "classes.php";
       }
     if (isset($_POST['submit'])) {
 		$user = new user();
-		$allproduit = $user->search_bug_report($base);
+		$type = mysqli_real_escape_string($base,$_POST['type']);
+		
+		if($type=='title'){
+			$allproduit=$user -> search_bug_report_by_title($base);
+		}
+		if($type=='developer'){
+			$allproduit=$user -> search_bug_report_by_developer($base);
+		}
+		if($type=='status'){
+			$allproduit=$user -> search_bug_report_by_status($base);
+		}
+		if($type=='keyword'){
+			$allproduit=$user -> search_bug_report_by_keyword($base);
+		}
+		
         $produits = $base->query($allproduit);
     }
     $produits = $base->query($allproduit); 

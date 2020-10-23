@@ -98,20 +98,42 @@ public function logout()
     echo '<a href="login.php?logout=true"> <i class="ion ion-power"></i> Logout</a>';
 }
 
-public function search_bug_report($base){
+public function search_bug_report_by_title($base){
 		$search = mysqli_real_escape_string($base,$_POST['search']);
         $type = mysqli_real_escape_string($base,$_POST['type']);
         
-        $allproduit = "SELECT * FROM `bug_report` where $type = '$search'";
+        $allproduit = "SELECT * FROM `bug_report` where  title = '$search'";
         
-        if($type == "developer")
-        {
-            $allproduit = "SELECT * FROM `user` as a inner join `bug_report` as b on b.developer_id = a.user_id where a.full_name = '$search'";
-            //echo "<p class='alert error'><b>Attention !</b> $allproduit</p>";
-        }
 		return $allproduit;
-
 }
+
+public function search_bug_report_by_developer($base){
+		$search = mysqli_real_escape_string($base,$_POST['search']);
+        $type = mysqli_real_escape_string($base,$_POST['type']);
+		
+        $allproduit = "SELECT * FROM `user` as a inner join `bug_report` as b on b.developer_id = a.user_id where a.full_name = '$search'";
+		
+		return $allproduit;
+}
+
+public function search_bug_report_by_status($base){
+		$search = mysqli_real_escape_string($base,$_POST['search']);
+        $type = mysqli_real_escape_string($base,$_POST['type']);
+        
+        $allproduit = "SELECT * FROM `bug_report` where  status = '$search'";
+        
+		return $allproduit;
+}
+
+public function search_bug_report_by_keyword($base){
+		$search = mysqli_real_escape_string($base,$_POST['search']);
+        $type = mysqli_real_escape_string($base,$_POST['type']);
+        
+        $allproduit = "SELECT * FROM `bug_report` where  keyword = '$search'";
+        
+		return $allproduit;
+}
+
 }
 
 
