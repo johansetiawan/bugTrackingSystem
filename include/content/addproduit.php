@@ -1,5 +1,6 @@
 
   <?php
+	  include "classes.php";
       if (isset($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == "Reporter" ) {
           ///
@@ -21,7 +22,7 @@
               $priority = mysqli_real_escape_string($base,nl2br($_POST['priority']));
 
 
-              $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`feature`,`version_no`,`priority`) VALUES ('$reporterid','$nomproduit','$descproduit','$feature','$versiono','$priority')";
+              $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`keyword`,`version_no`,`priority`) VALUES ('$reporterid','$nomproduit','$descproduit','$feature','$versiono','$priority')";
               $rq = mysqli_query($base,$addpro);
             die("<p class='alert success'>.$addpro Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
         }else{

@@ -93,6 +93,166 @@ public function login($base)
           }
 }
 
+public function logout()
+{
+    echo '<a href="login.php?logout=true"> <i class="ion ion-power"></i> Logout</a>';
+}
+
+}
+
+
+class bug_report{
+	
+private $bug_report_id =NULL;
+private $reporter_id = NULL;
+private $triager_id = NULL;
+private $developer_id = NULL;
+private $reviewer_id =NULL;
+private $title =NULL;
+private $description =NULL;
+private $keyword =NULL;
+private $version_no =NULL;
+private $status =NULL;
+private $priority =NULL;
+private $ts_created =NULL;
+private $ts_closed =NULL;
+private $ts_modified =NULL;
+
+public function set_bug_report_id($value)
+{
+	$this->bug_report_id = $value;
+}
+public function set_reporter_id($value)
+{
+	$this->reporter_id = $value;
+}
+public function set_triager_id($value)
+{
+	$this->triager_id = $value;
+}
+public function set_developer_id($value)
+{
+	$this->developer_id = $value;
+}
+public function set_reviewer_id($value)
+{
+	$this->reviewer_id = $value;
+}
+public function set_title($value)
+{
+	$this->title = $value;
+}
+public function set_description($value)
+{
+	$this->description = $value;
+}
+public function set_keyword($value)
+{
+	$this->keyword = $value;
+}
+public function set_version_no($value)
+{
+	$this->version_no = $value;
+}
+public function set_status($value)
+{
+	$this->status = $value;
+}
+public function set_priority($value)
+{
+	$this->priority = $value;
+}
+public function set_ts_created($value)
+{
+	$this->ts_created = $value;
+}
+public function set_ts_closed($value)
+{
+	$this->ts_closed = $value;
+}
+public function set_ts_modified($value)
+{
+	$this->ts_modified = $value;
+}
+
+
+
+public function get_bug_report_id()
+{
+	return $this->bug_report_id;
+}
+public function get_reporter_id()
+{
+	return $this->reporter_id;
+}
+public function get_triager_id()
+{
+	return $this->triager_id;
+}
+public function get_developer_id()
+{
+	return $this->developer_id;
+}
+public function get_reviewer_id()
+{
+	return $this->reviewer_id;
+}
+public function get_title()
+{
+	return $this->title;
+}
+public function get_description()
+{
+	return $this->description;
+}
+public function get_keyword()
+{
+	return $this->keyword;
+}
+public function get_version_no()
+{
+	return $this->version_no;
+}
+public function get_status()
+{
+	return $this->status;
+}
+public function get_priority()
+{
+	return $this->priority;
+}
+public function get_ts_created()
+{
+	return $this->ts_created;
+}
+public function get_ts_closed()
+{
+	return $this->ts_closed;
+}
+public function get_ts_modified()
+{
+	return $this->ts_modified;
+}
+
+public function create_bug_report($base){
+if (!empty($_POST['nomproduit']) && !empty($_POST['descproduit'])&& !empty($_POST['feature'])&& !empty($_POST['versiono'])&& !empty($_POST['priority'])) {
+              
+              $reporterid = $_SESSION['user']['user_id'];
+              $nomproduit = mysqli_real_escape_string($base,$_POST['nomproduit']);
+              $descproduit = mysqli_real_escape_string($base,nl2br($_POST['descproduit']));
+              $feature = mysqli_real_escape_string($base,nl2br($_POST['keyword']));
+              $versiono = mysqli_real_escape_string($base,nl2br($_POST['versiono']));
+              $priority = mysqli_real_escape_string($base,nl2br($_POST['priority']));
+
+
+              $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`feature`,`version_no`,`priority`) VALUES ('$reporterid','$nomproduit','$descproduit','$feature','$versiono','$priority')";
+              $rq = mysqli_query($base,$addpro);
+            die("<p class='alert success'>.$addpro Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
+        }else{
+            echo "<p class='alert error'><b>Attention !</b> error</p>";
+        }
+}
+
 }
 	 
 	 
