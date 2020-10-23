@@ -1,5 +1,5 @@
 ﻿      <?php 
-          $title="Espace d'inscription";
+          $title="Register";
           include('include/head.php'); 
       ?> 
 

@@ -1,12 +1,13 @@
 
   <?php
-	  include "classes.php";
+        include "classes.php";
       if (isset($_SESSION['user'])) {
         header('Location: index.php');
       }
 
-      if (isset($_POST['submit'])) {		  
-			$user = new user();
+      if (isset($_POST['submit'])) {
+          
+            $user = new user();
 			$user->login($base);
       }
   ?>
