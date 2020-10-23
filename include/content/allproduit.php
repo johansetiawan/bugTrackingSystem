@@ -1,5 +1,5 @@
 <?php
-
+include "classes.php";
     
 	if (isset($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == "Developer") {
@@ -14,17 +14,8 @@
         }   
       }
     if (isset($_POST['submit'])) {
-        $search = mysqli_real_escape_string($base,$_POST['search']);
-        $type = mysqli_real_escape_string($base,$_POST['type']);
-        
-        $allproduit = "SELECT * FROM `bug_report` where $type = '$search'";
-        
-        if($type == "developer")
-        {
-            $allproduit = "SELECT * FROM `user` as a inner join `bug_report` as b on b.developer_id = a.user_id where a.full_name = '$search'";
-            //echo "<p class='alert error'><b>Attention !</b> $allproduit</p>";
-        }
-        
+		$user = new user();
+		$allproduit = $user->search_bug_report($base);
         $produits = $base->query($allproduit);
     }
     $produits = $base->query($allproduit); 
