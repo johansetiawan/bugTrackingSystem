@@ -21,7 +21,7 @@ include "classes.php";
 			$allproduit=$user -> search_bug_report_by_title($base);
 		}
 		if($type=='developer'){
-			$allproduit=$user -> search_bug_report_by_developer($base);
+			$allproduit=$user -> search_bug_report_by_assignee($base);
 		}
 		if($type=='status'){
 			$allproduit=$user -> search_bug_report_by_status($base);

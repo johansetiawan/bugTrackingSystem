@@ -107,7 +107,7 @@ public function search_bug_report_by_title($base){
 		return $allproduit;
 }
 
-public function search_bug_report_by_developer($base){
+public function search_bug_report_by_assignee($base){
 		$search = mysqli_real_escape_string($base,$_POST['search']);
         $type = mysqli_real_escape_string($base,$_POST['type']);
 		
