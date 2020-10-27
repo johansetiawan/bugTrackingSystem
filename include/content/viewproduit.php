@@ -44,14 +44,12 @@ if (isset($_POST['submit'])) {
     </div>
     <div class="cont">
         <b><h1>Add Comments:</h1></b><br>
-        <form method="post" action="">
-<article>
-    <div class="cont">
-		<p style="margin-left: -80px;"><textarea  name="comment" ></textarea></p>
-	</div> 
-    <input type="hidden" name="uid" value="<?php echo $_SESSION['user']['user_id'] ?>">
-	<input type="submit" name="submit" value="post">
-</article>
+        <form method="post" action="" style="border:none;">
+    <div class="cont" style="margin-top: -30px;margin-left: -30px;">
+		<p><textarea name="comment" style="resize:none;"></textarea></p>
+		<input type="hidden" name="uid" value="<?php echo $_SESSION['user']['user_id'] ?>">
+		<input type="submit" name="submit" value="post">
+	</div>
 </form>
     </div>
 </article>

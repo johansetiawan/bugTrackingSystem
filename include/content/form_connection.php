@@ -11,18 +11,16 @@
 			$user->login($base);
       }
   ?>
-    <form action="login.php" method="post">
+    <form action="login.php" method="post" style="max-width: 100%;">
         <table>
         <tr>
-          <td>Login : </td>
-          <td><input type="text" name="login" placeholder="enter id"></input></td>
+          <td><input type="text" name="login" placeholder="Username / Email"></input></td>
         </tr>
         <tr>
-          <td>password : </td>
-          <td><input type="password" name="password" placeholder="enter password"></input></td>
+          <td><input type="password" name="password" placeholder="Password"></input></td>
         </tr>
         <tr>
-          <td colspan="2"><input type="submit" name="submit" value="login"></td> 
+          <td><input type="submit" name="submit" value="login"></td> 
         </tr>
       </table>
 </form>

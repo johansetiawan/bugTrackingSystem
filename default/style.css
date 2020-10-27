@@ -122,7 +122,8 @@ table
 	border-radius:10px;
 	padding:0px;
 	width:95%;
-	margin:5px auto 5px auto;
+	margin:5px 0px 5px 0px;
+	text-align: left;
 }
 tr
 {
@@ -136,7 +137,9 @@ td, th
 	margin:0px;
 	border:0px;
 	padding:3px;
-	text-align:center;
+	text-align: left;
+	vertical-align: top;
+	border: 5px rgba(120,180,220, 1);
 }
 /*****************************************************/
 /****Blocs****/
@@ -185,11 +188,11 @@ td, th
 {
 	border: 2px solid silver;
 	float: left;
-	width: 80%;
+	width: 85%;
 	margin: 5px;
 	padding: 10px;
 	background-color: white;
-	min-height: 100px;
+	min-height: 110px;
 }
 .divleft
 {
@@ -199,7 +202,7 @@ td, th
 	margin: 5px;
 	padding: 10px;
 	background-color: white;
-	min-height: 100px;
+	min-height: 110px;
 }
 .divright
 {
@@ -268,8 +271,11 @@ td, th
 }
 /** form ***/
 form{
-
-  transition-duration : 8s;
+	transition-duration : 8s;
+  	border: 2px solid silver;
+	margin: 5px;
+	padding: 10px;
+	background-color: white;
 }
 form input,form select,form textarea{
 	width: 90%;
@@ -291,8 +297,8 @@ form input[type="number"]{
 	width: 40%;
 }
 form textarea{
-	min-width: 380px;
-	max-width: 380px;
+	min-width: 200%;
+	max-width: 200%;
 	height: 200px;
 }
 
@@ -302,7 +308,7 @@ form input[type="submit"],form input[type="reset"]{
 	margin: 20px;
 	cursor: pointer;
 	display: inline-block;
-	color: #fff;
+	color: #555;
 	text-decoration: none;
 	font-weight: bold;
 	-moz-border-radius: 5px;

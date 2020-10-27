@@ -1,5 +1,5 @@
 ﻿      <?php 
-          $title="Roger Bug Tracker - Register";
+          $title="Roger Bug Tracker - Sign Up";
           include('include/head.php'); 
       ?> 
 

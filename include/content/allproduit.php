@@ -35,18 +35,28 @@ include "classes.php";
     $produits = $base->query($allproduit); 
 ?>
  <div>
-     <form method="post" action="">
-	
-        <b>search :</b>
-        <input type="text" name="search" placeholder="search"></input>
-        <select id="type" name="type">
-            <option value="title">title</option>
-            <option value="developer">developer</option>
-            <option value="status">status</option>
-            <option value="keyword">keyword</option>
-        </select>
-	<input type="submit" name="submit" value="Search">
-</form>
+     <form method="post" action="" style="max-width: 50%;">
+		<table>
+		<tr>
+			<td>
+				<input type="text" name="search" placeholder="Search"></input>
+			</td>
+			<td rowspan="2">
+				<input type="submit" name="submit" value="Search">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<select id="type" name="type">
+				<option value="title">Title</option>
+				<option value="developer">Developer</option>
+				<option value="status">Status</option>
+				<option value="keyword">Keyword</option>
+				</select>
+			</td>
+		</tr>
+		</table>
+	</form>
 </div>
 
 <?php  while($produit = $produits->fetch_array()) {?>   
@@ -60,12 +70,12 @@ include "classes.php";
 			<?php } } ?>
 			<a href="produit.php?num=<?php echo $produit['bug_id'];?>"><h3><?php echo $produit['title']; ?></h3></a>
 			<p>
-				<b class="plistop">DateTime : </b><?php echo $produit['ts_created']; ?>DT<br>
-				<b class="plistop">Description : </b> <?php echo $produit['description']; ?> <br>
-                <b class="plistop">Reporter Id : </b> <?php echo $produit['reporter_id']; ?> <br>
-                <b class="plistop">developer Id : </b> <?php echo $produit['developer_id']; ?> <br>
-                <b class="plistop">Status : </b> <?php echo $produit['status']; ?> <br>
-                <b class="plistop">Keyword : </b> <?php echo $produit['keyword']; ?> 
+				<b class="plistop">DateTime: </b> <?php echo $produit['ts_created']; ?>DT<br>
+				<b class="plistop">Description: </b> <?php echo $produit['description']; ?> <br>
+                <b class="plistop">Reporter Id: </b> <?php echo $produit['reporter_id']; ?> <br>
+                <b class="plistop">Developer Id: </b> <?php echo $produit['developer_id']; ?> <br>
+                <b class="plistop">Status: </b> <?php echo $produit['status']; ?> <br>
+                <b class="plistop">Keyword: </b> <?php echo $produit['keyword']; ?> 
 			</p> 
 		</div> 
 <?php }?>

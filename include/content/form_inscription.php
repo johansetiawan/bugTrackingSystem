@@ -38,19 +38,18 @@
       }
 
 ?>
-
-<form  method='post' action="" >
-<table > 
+<form  method='post' action="" style="padding-left: 30%;padding-right: 30%;">
+<table> 
   <tr>
-    <td colspan="2"><h3>Sign Up</h3> </td> 
+    <td colspan="10"><h3>Sign Up</h3> </td> 
   </tr>
-  <tr> <td colspan="2"><br>  </td></tr> 
+  <tr></tr> 
   <tr>
-    <td><p>Full Name :* <p> </td>
-    <td><input name="firstname" type="text"  /></td> 
+    <td colspan="1"><p>Full Name :* <p> </td>
+    <td colspan="9"><input name="firstname" type="text"/></td> 
   </tr>
   <tr>
-    <td><p>user type  : <p></td>
+    <td><p>User Type : <p></td>
     <td>
       <select name="usertype">
         <option value="Reporter">Reporter</option>
@@ -63,27 +62,26 @@
   
  
   <tr> 
-    <td><p> E-mail*  : <p></td> 
+    <td><p> E-mail* : <p></td> 
     <td><input name="email" type="email" /></td> 
   </tr>
   <tr>
-    <td><p>Password*  : <p></td>  
+    <td><p>Password* : <p></td>  
     <td>
       <input name="password1" type="password" />
     </td> 
   </tr>
   <tr>
-    <td><p>Re-Password* : <p></td>
+    <td><p>Confirm Password* : <p></td>
     <td>
       <input name="password2"  type="password"  />
     </td> 
-  </tr>  
-  <tr>
-    <td colspan="2"><input type="submit" name="submit" value="Submit Query" /></td>
-  </tr>  
-  <tr>
-    <td colspan="2"><span> * required</span></td>
   </tr>
-
+  <tr>
+  <td style="text-align:center;">* required</td>
+  </tr>
+  <tr>
+    <td colspan="2" style="text-align: right;"><input type="submit" name="submit" value="Register!" /></td>
+  </tr>
 </table> 
 </form>
