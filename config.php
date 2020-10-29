@@ -1,5 +1,8 @@
 ﻿<?php
-session_start();
+if(!isset($_SESSION)) {
+    // session isn't started
+    session_start();
+}
 $connect = true;
 $fileconf = "app/app.config";
 if (file_exists($fileconf)) {

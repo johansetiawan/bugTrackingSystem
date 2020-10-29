@@ -22,6 +22,23 @@
               //die();
           if ($_SESSION['user']['user_type'] == "Triager"){
               $editpro = "UPDATE bug_report SET status='".$stat."',developer_id='".$devid."', triager_id ='".$_SESSION['user']['user_id']."' WHERE bug_id=".$dataproduit['bug_id']."";
+              if($stat == "closed")
+              {
+                  $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$_SESSION['user']['user_id']."";
+                  $upd = mysqli_query($base,$addpoint);
+              }
+          }
+          else if($_SESSION['user']['user_type'] == "Developer")
+          {
+              $editpro = "UPDATE bug_report SET status='fixed' WHERE bug_id=".$dataproduit['bug_id']."";
+              $addpoint = "UPDATE user_developer set bugs_fixed = bugs_fixed+1 WHERE developer_id =".$_SESSION['user']['user_id']."";
+              $upd = mysqli_query($base,$addpoint);
+          }
+          else if($_SESSION['user']['user_type'] == "Reviewer")
+          {
+              $editpro = "UPDATE bug_report SET status='reviewed' WHERE bug_id=".$dataproduit['bug_id']."";
+              $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$_SESSION['user']['user_id']."";
+              $upd = mysqli_query($base,$addpoint);
           }
           else
           {
@@ -52,7 +69,7 @@
             ?>
         </select>
         <br><br>
-        <?php } ?>
+        <?php } if ($_SESSION['user']['user_type'] == "Triager"){?>
         <b>status :</b>
         <select id="status" name="status">
             <option value="open">open</option>
@@ -60,6 +77,7 @@
             <option value="reviewed">reviewed</option> 
             <option value="closed">closed</option> 
         </select>
+        <?php }?>
 	</div> 
 	<input type="submit" name="submit" value="Modify">
 </article>
