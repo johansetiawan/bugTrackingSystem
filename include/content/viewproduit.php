@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
         <b><h1>Add Comments:</h1></b><br>
         <form method="post" action="" style="border:none;">
     <div class="cont" style="margin-top: -30px;margin-left: -30px;">
-		<p><textarea name="comment" style="resize:none;"></textarea></p>
+		<p><textarea name="comment" style="min-width:200%; max-width:200%;"></textarea></p>
 		<input type="hidden" name="uid" value="<?php echo $_SESSION['user']['user_id'] ?>">
 		<input type="submit" name="submit" value="post">
 	</div>
