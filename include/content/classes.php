@@ -310,7 +310,7 @@ public function set_no_of_bugs_reported($value){
 
 class home_page{
 	
-	function log_out()
+	public function log_out()
 	{
 		 $home_controller = new home_controller();
 		 $home_controller->end_session();
@@ -322,18 +322,84 @@ class home_page{
 
 class home_controller{
 		
-	function end_session()
+	public function end_session()
 	{
 		 session_destroy();
 		 $this->redirect_login();
 	}
 	
-	function redirect_login()
+	public function redirect_login()
 	{
 		header("location:login.php?logout=true");
 	}
 	
 }
+
+
+class register_page{
+
+
+
+public function register_user($base,$email,$password,$full_name,$user_type,$repassword){
+	$register_controller = new register_controller();
+	$register_controller->validate_user_info($base,$email, $password,$full_name, $user_type,$repassword);
+	
+}
+
+public function display_success(){	
+	die("<p class='alert success'>Account created</p><br><center><a href='login.php'>Login</a> - <a href='index.php'>Home</a></center>");	
+}
+
+public function display_error(){
+	
+	echo "<p class='alert error'><b>Attention !</b> password is not the same or email already exists</p>";
+	
+	
+	
+}
+	
+}
+
+
+class register_controller{
+
+	
+public function validate_user_info($base,$email, $password,$full_name, $user_type,$repassword){
+	  $register_page=new register_page;
+	  $reqnumemail = "SELECT count(user_id) FROM user WHERE EMAIL LIKE '".$email."'";
+              $result = $base->query($reqnumemail);  
+              $numemail = $result->fetch_row(); 
+  
+              if ($numemail['0'] == 0) {
+
+                   if ($password == $repassword) {
+                        if($user_type == "Reviewer")
+						$user_reviewer = new user_reviewer($base,NULL,$email,$password,$full_name,$user_type);
+						else if($user_type=="Developer")
+						$user_developer = new user_developer($base,NULL,$email,$password,$full_name,$user_type);
+						else if($user_type=="Triager")
+						$user_triager = new user_triager($base,NULL,$email,$password,$full_name,$user_type);
+						else if($user_type=="Reporter")
+						$user_reporter = new user_reporter($base,NULL,$email,$password,$full_name,$user_type);                        
+						$req = "INSERT INTO `user` (`full_name`, `EMAIL`, `password`,`user_type`) VALUES ('$full_name','$email', '$password','$user_type')";
+                        $rq = mysqli_query($base,$req);						
+						$register_page->display_success();                      
+
+                  }else{
+					  $register_page->display_error();                      
+                  }
+
+              }else{
+				  $register_page->display_error(); 
+              }	
+}
+
+public function redirect_login(){}
+	
+}
+
+
+
 
 class bug_report{
 	
@@ -351,7 +417,6 @@ private $priority =NULL;
 private $ts_created =NULL;
 private $ts_closed =NULL;
 private $ts_modified =NULL;
-
 
 
 

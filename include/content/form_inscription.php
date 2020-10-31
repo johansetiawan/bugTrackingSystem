@@ -12,26 +12,8 @@
 
 
         if (!empty($fullname) && !empty($email) && !empty($email) && !empty($password) && !empty($repassword)) {
-
-              $reqnumemail = "SELECT count(user_id) FROM user WHERE EMAIL LIKE '".$email."'";
-              $result = $base->query($reqnumemail);  
-              $numemail = $result->fetch_row(); 
-  
-              if ($numemail['0'] == 0) {
-
-                   if ($password == $repassword) {
-                       
-                        $req = "INSERT INTO `user` (`full_name`, `EMAIL`, `password`,`user_type`) VALUES ('$fullname','$email', '$password','$usertype')";
-                        $rq = mysqli_query($base,$req);
-                        die("<p class='alert success'>Account created</p><br><center><a href='login.php'>Login</a> - <a href='index.php'>Home</a></center>");
-
-                  }else{
-                      echo "<p class='alert error'><b>Attention !</b> password not the same </p>";
-                  }
-
-              }else{
-                  echo "<p class='alert error'><b>Attention !</b> email already exist</p>";
-              }
+		$register_page = new register_page();
+		$register_page->register_user($base,$email,$password,$fullname,$usertype,$repassword);	
         }else{
           echo "<p class='alert error'><b>Attention !</b> fill up all required field</p>";
         }
