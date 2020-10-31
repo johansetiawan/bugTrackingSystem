@@ -7,8 +7,10 @@
 
       if (isset($_POST['submit'])) {
           
-            $user = new user();
-			$user->login($base);
+			$email = $_POST['login'];
+			$password = $_POST['password'];
+            $login_UI = new login_UI($base);
+			$login_UI->login($email,$password);
       }
   ?>
     <form action="login.php" method="post" style="max-width: 100%;">

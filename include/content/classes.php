@@ -1,13 +1,107 @@
 
  <?php
+ 
+ class login_UI{
+	 private $base = NULL;
+	 
+	 function __construct($base)
+	 {
+		 $this->base=$base;
+	 }
+	 
+	 public function login($email,$password)
+	{
+        $login_controller = new login_controller($this->base);
+		if (!empty($email) && !empty($password)) {
+         $login_controller->verify_login($email,$password);     			
+        }else{
+            echo "<p class='alert error'><b>Attention !</b> put something ah sial</p>";
+          }
+	}
+
+	public function display_fail()
+	{
+		echo "<p class='alert error'><b>Login Fail!</b></p>";
+	}
+	 
+ }
+ 
+ 
+class login_controller{
+	
+	function __construct($base)
+	{
+		$this->base=$base;
+	}
+	
+	
+	 public function verify_login($email,$password)
+	{       
+			  $data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
+			  $datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
+			  $user_id =$datauser['user_id'];
+			  $user_email = $datauser['email'];
+			  $user_password = $datauser['password'];
+			  $full_name = $datauser['full_name'];
+			  $user_type =$datauser['user_type'];
+			  if($user_type == "Reviewer")
+			  $user_reviewer = new user_reviewer($base,$user_id,$email,$user_password,$full_name,$user_type);
+		      else if($user_type=="Developer")
+			  $user_developer = new user_developer($base,$user_id,$email,$user_password,$full_name,$user_type);
+		      else if($user_type=="Triager")
+			  $user_triager = new user_triager($base,$user_id,$email,$user_password,$full_name,$user_type);
+		      else if($user_type=="Reporter")
+			  $user_reporter = new user_reporter($base,$user_id,$email,$user_password,$full_name,$user_type);
+			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
+              $result = $this->base->query($reqnumlogin);  
+              $numLOGIN = $result->fetch_row(); 
+  
+              if ($numLOGIN['0'] == 1) {
+				  $login_UI = new login_UI($this->base);
+                  if ($password == $user_password) {
+					$this->redirect_home($user_email);
+                    }else{
+                        $login_UI->display_fail();
+                    }
+                }else{
+                 $login_UI->display_fail();
+                }
+
+	}
+
+	public function redirect_home($email)
+	{
+		$data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
+        $datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
+        $_SESSION['user'] = $datauser;
+        if ($_SESSION['user']['user_type'] == "Reporter") {
+              header('Location: admin.php');
+        }else{
+              header('Location: user.php');
+        }		
+	}
+}
+ 
+ 
 class user{
 	
-private $user_id =NULL;
-private $email = NULL;
-private $password = NULL;
-private $full_name = NULL;
-private $user_type =NULL;
+protected $base = NULL;
+protected $user_id =NULL;
+protected $email = NULL;
+protected $password = NULL;
+protected $full_name = NULL;
+protected $user_type =NULL;
 
+
+function __construct($base,$user_id,$email,$password,$full_name,$user_type)
+{
+	$this->base = $base;
+	$this->user_id = $user_id;
+	$this->email = $email;
+	$this->password = $password;
+	$this->full_name = $full_name;
+	$this->user_type = $user_type;
+}
 
 public function set_user_id($value)
 {
@@ -52,52 +146,12 @@ public function get_user_type()
 {
 	return $this->user_type;
 }
-
-public function login($base)
-{
-            $loguser = mysqli_real_escape_string($base,$_POST['login']);
-            $passuser = mysqli_real_escape_string($base,$_POST['password']);
-			$this->email = $_POST['login'];
-			$this->password = $_POST['password'];
-
-        if (!empty($loguser) && !empty($passuser)) {
-              
-              $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$this->email."'";
-              $result = $base->query($reqnumlogin);  
-              $numLOGIN = $result->fetch_row(); 
-  
-              if ($numLOGIN['0'] == 1) {
-
-                  $findpass = "SELECT `password` FROM `user` WHERE `email` LIKE '". $this->email."'";
-                  $realpass = $base->query($findpass)->fetch_object()->password;  
-                  $userpass = $this->password;
-                  if ($userpass == $realpass) {
-
-                        $data = "SELECT * FROM `user` WHERE `email` LIKE '".$this->email."'";
-                        $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-                        $_SESSION['user'] = $datauser;
-                        if ($_SESSION['user']['user_type'] == "Reporter") {
-                            header('Location: admin.php');
-                        }else{
-                            header('Location: user.php');
-                        }
-
-                    }else{
-                        echo "<p class='alert error'><b>Attention !</b> wrong ah sial</p>";
-                    }
-                }else{
-                  echo "<p class='alert error'><b>Attention !</b> no connection</p>";
-                }
-        }else{
-            echo "<p class='alert error'><b>Attention !</b> put something ah sial</p>";
-          }
-}
-
+/*
 public function logout()
 {
     echo '<a href="login.php?logout=true"> <i class="ion ion-power"></i> Logout</a>';
 }
-
+*//*
 public function search_bug_report_by_title($base){
 		$search = mysqli_real_escape_string($base,$_POST['search']);
         $type = mysqli_real_escape_string($base,$_POST['type']);
@@ -133,9 +187,153 @@ public function search_bug_report_by_keyword($base){
         
 		return $allproduit;
 }
+*/
+}
+
+class user_reviewer extends user{
+
+protected $bug_report_resolved=NULL;
+
+function __construct($base,$user_id,$email,$password,$full_name,$user_type)
+{
+	$this->base = $base;
+	$this->user_id = $user_id;
+	$this->email = $email;
+	$this->password = $password;
+	$this->full_name = $full_name;
+	$this->user_type = $user_type;
+}
+
+public function get_no_of_bug_report_resolved(){
+	return $this->$bug_report_resolved;
+}
+
+public function set_no_of_bug_report_resolved($value){
+	$this->$bug_report_resolved=$value;
+}
 
 }
 
+
+class user_developer extends user{
+
+protected $bug_report_fixed=NULL;
+protected $expertise=NUll;
+
+function __construct($base,$user_id,$email,$password,$full_name,$user_type)
+{
+	$this->base = $base;
+	$this->user_id = $user_id;
+	$this->email = $email;
+	$this->password = $password;
+	$this->full_name = $full_name;
+	$this->user_type = $user_type;
+}
+
+public function get_no_of_bug_report_fixedl(){
+	return $this->bug_report_fixed;
+}
+
+public function set_no_of_bug_report_fixed(){
+	$this->$bug_report_fixed=$value;
+}
+
+public function get_expertise(){
+	return $this->expertise;
+}
+
+public function set_expertise($value){
+	$this->$expertise=$value;
+}
+
+
+}
+
+
+class user_triager extends user{
+	
+protected $bug_report_closed=NULL;
+
+function __construct($base,$user_id,$email,$password,$full_name,$user_type)
+{
+	$this->base = $base;
+	$this->user_id = $user_id;
+	$this->email = $email;
+	$this->password = $password;
+	$this->full_name = $full_name;
+	$this->user_type = $user_type;
+}
+
+public function get_no_of_bug_report_closed(){
+	return $this->bug_report_closed;
+}
+
+public function set_no_of_bug_report_closed($value){
+	$this->$bug_report_closed=$value;
+}
+
+}
+
+
+class user_reporter extends user{
+
+protected $roles=NULL;
+protected $bugs_reported=NULL;
+function __construct($base,$user_id,$email,$password,$full_name,$user_type)
+{
+	$this->base = $base;
+	$this->user_id = $user_id;
+	$this->email = $email;
+	$this->password = $password;
+	$this->full_name = $full_name;
+	$this->user_type = $user_type;
+}
+
+public function get_roles(){
+	return $this->roles;
+}
+
+public function set_roles($value){
+	$this->$roles=$value;
+}
+
+public function get_no_of_bugs_reported(){
+	return $this->bugs_reported;
+}
+
+public function set_no_of_bugs_reported($value){
+	$this->$bugs_reported=$value;
+}
+
+}
+
+
+class home_page{
+	
+	function log_out()
+	{
+		 $home_controller = new home_controller();
+		 $home_controller->end_session();
+	}
+	
+	
+}
+
+
+class home_controller{
+		
+	function end_session()
+	{
+		 session_destroy();
+		 $this->redirect_login();
+	}
+	
+	function redirect_login()
+	{
+		header("location:login.php?logout=true");
+	}
+	
+}
 
 class bug_report{
 	
@@ -153,6 +351,9 @@ private $priority =NULL;
 private $ts_created =NULL;
 private $ts_closed =NULL;
 private $ts_modified =NULL;
+
+
+
 
 public function set_bug_report_id($value)
 {
