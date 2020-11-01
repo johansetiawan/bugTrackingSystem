@@ -29,6 +29,8 @@
  
 class login_controller{
 	
+	protected $base=NULL;
+	
 	function __construct($base)
 	{
 		$this->base=$base;
@@ -45,13 +47,13 @@ class login_controller{
 			  $full_name = $datauser['full_name'];
 			  $user_type =$datauser['user_type'];
 			  if($user_type == "Reviewer")
-			  $user_reviewer = new user_reviewer($base,$user_id,$email,$user_password,$full_name,$user_type);
+			  $user_reviewer = new user_reviewer($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 		      else if($user_type=="Developer")
-			  $user_developer = new user_developer($base,$user_id,$email,$user_password,$full_name,$user_type);
+			  $user_developer = new user_developer($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 		      else if($user_type=="Triager")
-			  $user_triager = new user_triager($base,$user_id,$email,$user_password,$full_name,$user_type);
+			  $user_triager = new user_triager($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 		      else if($user_type=="Reporter")
-			  $user_reporter = new user_reporter($base,$user_id,$email,$user_password,$full_name,$user_type);
+			  $user_reporter = new user_reporter($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
               $result = $this->base->query($reqnumlogin);  
               $numLOGIN = $result->fetch_row(); 
@@ -403,6 +405,7 @@ public function redirect_login(){}
 
 class bug_report{
 	
+private $base = NULL;
 private $bug_report_id =NULL;
 private $reporter_id = NULL;
 private $triager_id = NULL;
@@ -418,7 +421,24 @@ private $ts_created =NULL;
 private $ts_closed =NULL;
 private $ts_modified =NULL;
 
-
+function __construct($base, $bug_report_id, $reporter_id, $triager_id, $developer_id, $reviewer_id, $title, $description, $keyword, $version_no, $status, $priority, $ts_created, $ts_closed, $ts_modified){
+	$this->base=$base;
+	$this->bug_report_id=$bug_report_id;
+	$this->reporter_id=$reporter_id;
+	$this->triager_id=$triager_id;
+	$this->developer_id=$developer_id;
+	$this->developer_id=$developer_id;
+	$this->reviewer_id=$reviewer_id;
+	$this->title=$title;
+	$this->description=$description;
+	$this->keyword=$keyword;
+	$this->version_no=$version_no;
+	$this->status=$status;
+	$this->priority=$priority;
+	$this->ts_created=$ts_created;
+	$this->ts_closed=$ts_closed;
+	$this->ts_modified=$ts_modified;
+}
 
 public function set_bug_report_id($value)
 {
@@ -555,7 +575,79 @@ public function create_bug_report($base){
         }
 }
 
+public function retrieve_bug_report_by_keyword($base,$keyword){      
+		$allproduit = "SELECT * FROM `bug_report` where  keyword = '$keyword'";
+		$produits = $base->query($allproduit);
+		return $produits;
+}	
+
+public function retrieve_bug_report_by_status($base,$status){      
+		$allproduit = "SELECT * FROM `bug_report` where  status = '$status'";
+		$produits = $base->query($allproduit);
+		return $produits;
 }
-	 
+
+public function retrieve_bug_report_by_title($base,$title){      
+		$allproduit = "SELECT * FROM `bug_report` where  title = '$title'";
+		$produits = $base->query($allproduit);
+		return $produits;
+}			
+
+public function retrieve_bug_report_by_assignee($base,$assignee){      
+		$allproduit = "SELECT * FROM `user` as a inner join `bug_report` as b on b.developer_id = a.user_id where a.full_name = '$assignee'";
+		$produits = $base->query($allproduit);
+		return $produits;
+}	
+
+}
+	
+
+class bug_report_list_page{
+	
+	public function search_bug_report_by_keyword($base,$keyword){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_keyword($base,$keyword);    		
+	}
+	
+	public function search_bug_report_by_status($base,$status){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_status($base,$status);    		
+	}
+	
+	public function search_bug_report_by_title($base,$title){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_title($base,$title);    		
+	}
+	
+	public function search_bug_report_by_assignee($base,$assignee){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_assignee($base,$assignee);    		
+	}
+	
+}
+
+
+class bug_report_list_controller{
+	
+	public function get_bug_report_by_keyword($base,$keyword){		
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->retrieve_bug_report_by_keyword($base,$keyword);
+	}
+	
+	public function get_bug_report_by_status($base,$status){		
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->retrieve_bug_report_by_status($base,$status);
+	}
+	
+	public function get_bug_report_by_title($base,$title){		
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->retrieve_bug_report_by_title($base,$title);
+	}
+	
+	public function get_bug_report_by_assignee($base,$assignee){		
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->retrieve_bug_report_by_assignee($base,$assignee);
+	}
+}	
 	 
  ?>

@@ -1,29 +1,37 @@
 <?php
 include "classes.php";
 $allproduit ="";
+
 if (isset($_SESSION['user'])) {
     $allproduit = "SELECT * FROM `bug_report`";
     $produits = $base->query($allproduit);
 }
 
 if (isset($_POST['submit'])) {
-    $user = new user();
+    //$user = new user();
     $type = mysqli_real_escape_string($base,$_POST['type']);
+	$search = mysqli_real_escape_string($base,$_POST['search']);
 
     if($type=='title'){
-        $allproduit=$user -> search_bug_report_by_title($base);
+        $bug_report_list_page=new bug_report_list_page();
+		$produits=$bug_report_list_page->search_bug_report_by_title($base,$search);
     }
+	
     if($type=='developer'){
-        $allproduit=$user -> search_bug_report_by_assignee($base);
+        $bug_report_list_page=new bug_report_list_page();
+		$produits=$bug_report_list_page->search_bug_report_by_assignee($base,$search);
     }
+	
     if($type=='status'){
-        $allproduit=$user -> search_bug_report_by_status($base);
+        $bug_report_list_page=new bug_report_list_page();
+		$produits=$bug_report_list_page->search_bug_report_by_status($base,$search);
     }
     if($type=='keyword'){
-        $allproduit=$user -> search_bug_report_by_keyword($base);
+        $bug_report_list_page=new bug_report_list_page();
+		$produits=$bug_report_list_page->search_bug_report_by_keyword($base,$search);
     }
-    echo $allproduit;
-    $produits = $base->query($allproduit);
+    //echo $allproduit;
+    //$produits = $base->query($allproduit);
 }
 if(isset($_POST['show']))
 {
@@ -33,14 +41,14 @@ if(isset($_POST['show']))
 
 ?>
 <div>
-    <form method="post" action="" style="max-width: 50%;">
+    <form method="post" action="list_produit.php" style="max-width: 50%;">
         <table>
             <tr>
                 <td>
                     <input type="text" name="search" placeholder="Search"></input>
             </td>
         <td rowspan="2">
-            <input type="submit" id="submit" value="Search">
+            <input type="submit" id="submit" value="Search" name ="submit">
         </td>
         </tr>
     <tr>
@@ -58,7 +66,7 @@ if(isset($_POST['show']))
 </div>
 <?php if ($_SESSION['user']['user_type'] == "Developer")
 {?>
-<form method="post" action="">
+<form method="post" action="list_produit.php">
 <input type="submit" name="show" value="show assigned" />
 </form>
 <?php
