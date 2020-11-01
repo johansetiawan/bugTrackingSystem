@@ -9,13 +9,16 @@
       if (isset($_POST['submit'])) {
         if (!empty($_POST['email']) && !empty($_POST['password1'])) {
               
-              $pass = mysqli_real_escape_string($base,$_POST['password1']);  
+              
+			  $password = mysqli_real_escape_string($base,$_POST['password1']);  
               $email = mysqli_real_escape_string($base,$_POST['email']); 
-              $id = $_SESSION['user']['user_id'];
-
+              $user_id = $_SESSION['user']['user_id'];
+			  
+			  
+			  
               //echo $_POST['descproduit'].'<hr>'.$descproduit; 
 
-              $editpro = "UPDATE user SET email='$email',PASSWORD='$pass' WHERE user_id='$id'";
+              $editpro = "UPDATE user SET email='$email',PASSWORD='$password' WHERE user_id='$user_id'";
               echo "<p class='alert error'><b>Attention !</b> $editpro</p>";
              //die($editpro);
               $rq = mysqli_query($base,$editpro);

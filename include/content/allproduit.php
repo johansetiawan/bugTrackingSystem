@@ -3,8 +3,8 @@ include "classes.php";
 $allproduit ="";
 
 if (isset($_SESSION['user'])) {
-    $allproduit = "SELECT * FROM `bug_report`";
-    $produits = $base->query($allproduit);
+    $bug_report_list_page=new bug_report_list_page();
+	$produits=$bug_report_list_page->display_bug_reports($base);
 }
 
 if (isset($_POST['submit'])) {
@@ -35,8 +35,11 @@ if (isset($_POST['submit'])) {
 }
 if(isset($_POST['show']))
 {
-    $allproduit = "SELECT * FROM `bug_report` where developer_id = ".$_SESSION['user']['user_id'];
-    $produits = $base->query($allproduit);
+    $developer_id=$_SESSION['user']['user_id'];
+	$bug_report_list_page=new bug_report_list_page();
+	$produits=$bug_report_list_page->find_bug_reports_assigned_to_me($base,$developer_id);
+	/*$allproduit = "SELECT * FROM `bug_report` where developer_id = ".$developer_id;
+    $produits = $base->query($allproduit);*/
 }
 
 ?>

@@ -9,6 +9,11 @@
       }else{
         header('Location: login.php');
       }
+	  
+	  include"classes.php";
+	  $user_id = $_SESSION['user']['user_id'];
+	  $home_page = new home_page();
+	  $datauser=$home_page->display_user_details($base,$user_id);
       
 	//var_dump($_SESSION) 
 ?>
@@ -18,10 +23,10 @@
 			<a href="edit_infos.php" class="delete"><i class="ion ion-wrench"></i></a> 
 		</div>
 		<div class="cont">
-			<h2><?php echo $_SESSION['user']['full_name']." "?> <span class="tag"><i class="ion ion-chevron-left"></i> <?php echo $_SESSION['user']['email']; ?> <i class="ion ion-chevron-right"></i></span></h2> <br>
+			<h2><?php echo $datauser['full_name']." "?> <span class="tag"><i class="ion ion-chevron-left"></i> <?php echo $datauser['email']; ?> <i class="ion ion-chevron-right"></i></span></h2> <br>
 			<p>
-				<b>E-mail : </b><?php echo $_SESSION['user']['email']; ?><br>
-				<b>Role : </b><?php echo $_SESSION['user']['user_type']; ?><br>
+				<b>E-mail : </b><?php echo $datauser['email']; ?><br>
+				<b>Role : </b><?php echo $datauser['user_type']; ?><br>
 			</p>
 		</div>
 	</article>

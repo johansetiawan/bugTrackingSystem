@@ -312,6 +312,11 @@ public function set_no_of_bugs_reported($value){
 
 class home_page{
 	
+	public function display_user_details($base,$user_id){
+		$home_controller = new home_controller();
+		return $home_controller->get_user_details($base,$user_id);
+	}
+	
 	public function log_out()
 	{
 		 $home_controller = new home_controller();
@@ -335,6 +340,27 @@ class home_controller{
 		header("location:login.php?logout=true");
 	}
 	
+	public function get_user_details($base,$user_id){
+		
+		$data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$user_id."'";
+		$datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+		$user_id =$datauser['user_id'];
+		$user_email = $datauser['email'];
+		$user_password = $datauser['password'];
+		$full_name = $datauser['full_name'];
+		$user_type =$datauser['user_type'];
+		if($user_type == "Reviewer")
+		$user_reviewer = new user_reviewer($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+		else if($user_type=="Developer")
+		$user_developer = new user_developer($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+		else if($user_type=="Triager")
+		$user_triager = new user_triager($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+		else if($user_type=="Reporter")
+		$user_reporter = new user_reporter($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+		return $datauser;
+	}
+	
+	
 }
 
 
@@ -354,10 +380,7 @@ public function display_success(){
 
 public function display_error(){
 	
-	echo "<p class='alert error'><b>Attention !</b> password is not the same or email already exists</p>";
-	
-	
-	
+	echo "<p class='alert error'><b>Attention !</b> password is not the same or email already exists</p>";	
 }
 	
 }
@@ -398,6 +421,53 @@ public function validate_user_info($base,$email, $password,$full_name, $user_typ
 
 public function redirect_login(){}
 	
+}
+
+class edit_profile_page{
+	public function edit_profile($base,$password,$email,$user_id){
+		$edit_profile_controller=new edit_profile_controller();
+		$edit_profile_controller->validate_info($base,$password,$email,$user_id);
+	}
+	
+	
+	
+	
+}
+
+
+class edit_profile_controller{
+	public function validate_info($base,$password,$email,$user_id){
+		$data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$user_id."'";
+		$datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+		$user_id =$datauser['user_id'];
+		$user_email = $datauser['email'];
+		$user_password = $datauser['password'];
+		$full_name = $datauser['full_name'];
+		$user_type =$datauser['user_type'];
+		$user = new user($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+		$user->set_email=$email;
+		$user->set_password=$password;
+		$new_email=$user->get_email();
+		$new_password=$user->get_password();
+		
+		$editpro = "UPDATE user SET email='$new_email',PASSWORD='$new_password' WHERE user_id='$user_id'";
+        echo "<p class='alert error'><b>Attention !</b> $editpro</p>";
+        //die($editpro);
+        $rq = mysqli_query($base,$editpro);
+
+        $data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$_SESSION['user']['user_id']."'";
+        $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+        $_SESSION['user'] = $datauser;
+
+        if ($user_type == "Reporter") {
+            header('Location: admin.php');
+        }else{
+            header('Location: user.php');
+        }
+		
+				
+	}
+		
 }
 
 
@@ -575,6 +645,12 @@ public function create_bug_report($base){
         }
 }
 
+public function retrieve_all_bug_reports($base){      
+		$allproduit = "SELECT * FROM `bug_report`";
+		$produits = $base->query($allproduit);
+		return $produits;
+}	
+
 public function retrieve_bug_report_by_keyword($base,$keyword){      
 		$allproduit = "SELECT * FROM `bug_report` where  keyword = '$keyword'";
 		$produits = $base->query($allproduit);
@@ -599,10 +675,22 @@ public function retrieve_bug_report_by_assignee($base,$assignee){
 		return $produits;
 }	
 
+public function retrieve_all_bug_report_assigned_to_me($base,$developer_id){      
+		$allproduit = "SELECT * FROM `bug_report` where developer_id = ".$developer_id;
+		$produits = $base->query($allproduit);
+		return $produits;
+}
+
+
 }
 	
 
 class bug_report_list_page{
+	
+	public function display_bug_reports($base){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_reports($base);    		
+	}
 	
 	public function search_bug_report_by_keyword($base,$keyword){
 		$bug_report_list_controller = new bug_report_list_controller(); 
@@ -624,10 +712,21 @@ class bug_report_list_page{
 		return $bug_report_list_controller->get_bug_report_by_assignee($base,$assignee);    		
 	}
 	
+	public function find_bug_reports_assigned_to_me($base,$developer_id){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->find_bug_reports_assigned_to_me($base,$developer_id);    		
+	}
+	
 }
 
 
 class bug_report_list_controller{
+	
+	public function get_bug_reports($base){		
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->retrieve_all_bug_reports($base);
+	}
+	
 	
 	public function get_bug_report_by_keyword($base,$keyword){		
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
@@ -647,6 +746,11 @@ class bug_report_list_controller{
 	public function get_bug_report_by_assignee($base,$assignee){		
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		return $bug_report->retrieve_bug_report_by_assignee($base,$assignee);
+	}
+	
+	public function find_bug_reports_assigned_to_me($base,$developer_id){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->retrieve_all_bug_report_assigned_to_me($base,$developer_id); 		
 	}
 }	
 	 
