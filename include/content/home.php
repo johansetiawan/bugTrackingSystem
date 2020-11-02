@@ -7,6 +7,11 @@
             
 		  echo "<br/>Please click <b><a href='report.php'>here</a></b> to generate reports.";
         }
+        if($_SESSION['user']['user_type'] == "admin")
+        {
+            
+		  echo "<br/>Please click <b><a href='listusers.php'>here</a></b> to generate user list.";
+        }
 	}
 	else
 	{

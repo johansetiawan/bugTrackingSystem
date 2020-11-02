@@ -56,7 +56,10 @@
 	<h1><?php echo $dataproduit['title']; ?></h1>
 	<div class="cont">
 		<b>Time posted : </b><?php echo $dataproduit['ts_created']; ?><br><br>
-		<b>Description :</b><br><p><?php echo $dataproduit['description']; ?></p>
+		<b>Description :</b><br><p><?php echo $dataproduit['description']; ?></p><br><br>
+        <b>Version No :</b> <?php echo $dataproduit['version_no']; ?><br><br>
+        <b>status :</b> <?php echo $dataproduit['status']; ?><br><br>
+        <b>priority :</b> <?php echo $dataproduit['priority']; ?><br><br>
 	</div>
 	<div class="cont">
         <?php if ($_SESSION['user']['user_type'] == "Triager"){ ?>

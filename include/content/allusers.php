@@ -1,6 +1,6 @@
 <?php
 	if (isset($_SESSION['user'])) {
-        if ($_SESSION['user']['user_type'] != "") {
+        if ($_SESSION['user']['user_type'] == "admin") {
           
 		    $allusers = "SELECT * FROM `user`";
 		    $users = $base->query($allusers); 
@@ -12,7 +12,7 @@
           header('Location:login.php');
       }
 ?>
-   
+   <h1>Admin Page</h1>
 		<div class="table_list"> 
 			<table>
 		      <thead>
@@ -39,7 +39,7 @@
 		        <tr>
 		          <td><?php echo $user['user_id'];?></td>
 		          <td><?php echo $user['full_name']; ?></td>
-		          <td><?php echo $user['E_MAIL'];?></td>
+		          <td><?php echo $user['email'];?></td>
 		          <td><?php echo $user['user_type'];?></td>
 		          <td><a href="delete_user.php?id=<?php echo $user['user_id'];?>" class="delete"><i class="ion ion-trash-a"></i></a></td>
 		        </tr>  
