@@ -1,6 +1,7 @@
 
   <?php
-    $alldev = "SELECT * FROM user where user_type ='Developer'";
+    include("classes.php");
+	$alldev = "SELECT * FROM user where user_type ='Developer'";
     $devs = $base->query($alldev); 
       if (isset($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == "Triager" || $_SESSION['user']['user_type'] == "Developer" || $_SESSION['user']['user_type'] == "Reviewer") {
@@ -15,37 +16,39 @@
       if (isset($_POST['submit'])) {
         
               
-              $devid = mysqli_real_escape_string($base,nl2br($_POST['devid']));
-            $stat = mysqli_real_escape_string($base,nl2br($_POST['status']));
+            $developer_id = mysqli_real_escape_string($base,nl2br($_POST['devid']));
+            $status = mysqli_real_escape_string($base,nl2br($_POST['status']));
+			$bug_report_id=$dataproduit['bug_id'];
 
               //echo $_POST['descproduit'].'<hr>'.$descproduit;
               //die();
-          if ($_SESSION['user']['user_type'] == "Triager"){
-              $editpro = "UPDATE bug_report SET status='".$stat."',developer_id='".$devid."', triager_id ='".$_SESSION['user']['user_id']."' WHERE bug_id=".$dataproduit['bug_id']."";
-              if($stat == "closed")
-              {
-                  $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$_SESSION['user']['user_id']."";
-                  $upd = mysqli_query($base,$addpoint);
-              }
+		  
+		 if ($_SESSION['user']['user_type'] == "Triager"){
+			  $triager_id = $_SESSION['user']['user_id'];
+			  $bug_report_detail_page=new bug_report_detail_page();
+			  $bug_report_detail_page->change_bug_report_status_triager($base,$status,$triager_id,$developer_id,$bug_report_id);           	  
           }
+		  
           else if($_SESSION['user']['user_type'] == "Developer")
-          {
-              $editpro = "UPDATE bug_report SET status='fixed' WHERE bug_id=".$dataproduit['bug_id']."";
-              $addpoint = "UPDATE user_developer set bugs_fixed = bugs_fixed+1 WHERE developer_id =".$_SESSION['user']['user_id']."";
-              $upd = mysqli_query($base,$addpoint);
+          {			  
+			  $developer_id = $_SESSION['user']['user_id'];
+			  $bug_report_detail_page=new bug_report_detail_page();
+			  $bug_report_detail_page->change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id);			  
+              
           }
           else if($_SESSION['user']['user_type'] == "Reviewer")
-          {
-              $editpro = "UPDATE bug_report SET status='reviewed' WHERE bug_id=".$dataproduit['bug_id']."";
-              $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$_SESSION['user']['user_id']."";
-              $upd = mysqli_query($base,$addpoint);
+          {			
+			 $reviewer_id = $_SESSION['user']['user_id'];
+			  $bug_report_detail_page=new bug_report_detail_page();
+			  $bug_report_detail_page->change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id);     
           }
           else
           {
-              $editpro = "UPDATE bug_report SET status='".$stat."' WHERE bug_id=".$dataproduit['bug_id']."";
+              $editpro = "UPDATE bug_report SET status='".$status."' WHERE bug_id=".$bug_report_id."";
+			  $rq = mysqli_query($base,$editpro);	
           }
               
-              $rq = mysqli_query($base,$editpro);
+             // $rq = mysqli_query($base,$editpro);
             //echo "<p class='alert error'><b>$editpro</b> error</p>";
             header('Location:list_produit.php');
         

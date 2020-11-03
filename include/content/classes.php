@@ -471,8 +471,6 @@ class edit_profile_controller{
 }
 
 
-
-
 class bug_report{
 	
 private $base = NULL;
@@ -507,7 +505,7 @@ function __construct($base, $bug_report_id, $reporter_id, $triager_id, $develope
 	$this->priority=$priority;
 	$this->ts_created=$ts_created;
 	$this->ts_closed=$ts_closed;
-	$this->ts_modified=$ts_modified;
+	$this->ts_modified=$ts_modified;	
 }
 
 public function set_bug_report_id($value)
@@ -681,6 +679,13 @@ public function retrieve_all_bug_report_assigned_to_me($base,$developer_id){
 		return $produits;
 }
 
+public function remove_bug_report_from_database($base,$bug_report_id){	
+    $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$bug_report_id."'";
+    $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+    if (!empty($dataproduit)) {
+        $base->query("DELETE FROM bug_report WHERE bug_id=".$bug_report_id."");
+    } 
+}
 
 }
 	
@@ -715,6 +720,11 @@ class bug_report_list_page{
 	public function find_bug_reports_assigned_to_me($base,$developer_id){
 		$bug_report_list_controller = new bug_report_list_controller(); 
 		return $bug_report_list_controller->find_bug_reports_assigned_to_me($base,$developer_id);    		
+	}
+	
+	public function delete_bug_report($base,$bug_report_id){
+		$bug_report_list_controller = new bug_report_list_controller();
+		$bug_report_list_controller->remove_bug_report($base,$bug_report_id);
 	}
 	
 }
@@ -752,6 +762,101 @@ class bug_report_list_controller{
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		return $bug_report->retrieve_all_bug_report_assigned_to_me($base,$developer_id); 		
 	}
+	
+	public function remove_bug_report($base,$bug_report_id){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		$bug_report->remove_bug_report_from_database($base,$bug_report_id);
+		$this->redirect_bug_report_list();
+	}
+	
+	public function redirect_bug_report_list(){
+		header('Location: list_produit.php');	
+	}
+}
+
+
+class report_bug_page{
+	
+	public function report_a_bug($base, $reporter_id, $title, $description, $keyword, $version_no, $priority){
+		$report_bug_controller = new report_bug_controller();
+		$report_bug_controller->validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority);		
+	}
+
+}
+
+class report_bug_controller{
+	
+	public function validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority){
+		 if (!empty($title) && !empty($description)&& !empty($keyword)&& !empty($version_no)&& !empty($priority)) {
+			  $bug_report=new bug_report($base, NULL, $reporter_id, NULL, NULL, NULL, $title, $description, $keyword, $version_no, NULL, $priority, NULL, NULL, NULL);
+			  $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`keyword`,`version_no`,`priority`) VALUES ('$reporter_id','$title','$description','$keyword','$version_no','$priority')";
+			  $rq = mysqli_query($base,$addpro);
+			  die("<p class='alert success'>.$addpro Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
+        }else{
+            echo "<p class='alert error'><b>Attention !</b> error</p>";
+        }	
+	}
+	
 }	
+
+class bug_report_detail_page{
+	
+	public function change_bug_report_status_triager($base,$status,$triager_id,$developer_id,$bug_report_id){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_status_triager($base,$status,$triager_id,$developer_id,$bug_report_id);		
+	}
+	
+	public function change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id);		
+	}
+	
+	public function change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id);		
+	}
+		
+	
+}
+
+class bug_report_detail_controller{
+	
+	public function set_bug_report_status_triager($base,$status,$triager_id,$developer_id,$bug_report_id){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		$bug_report->set_status($status);	
+		$bug_report->set_triager_id($triager_id);
+		$bug_report->set_developer_id($developer_id);
+		$editpro = "UPDATE bug_report SET status='".$status."',developer_id='".$developer_id."', triager_id ='".$triager_id."' WHERE bug_id=".$bug_report_id."";
+        if($status == "closed")
+        {
+            $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$triager_id."";
+            $upd = mysqli_query($base,$addpoint);
+        }
+		$rq = mysqli_query($base,$editpro);		
+	}
+	
+	public function set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		$bug_report->set_status($status);	
+		$editpro = "UPDATE bug_report SET status='fixed' WHERE bug_id=".$bug_report_id."";
+        $addpoint = "UPDATE user_developer set bugs_fixed = bugs_fixed+1 WHERE developer_id =".$developer_id."";
+        $upd = mysqli_query($base,$addpoint);
+		$rq = mysqli_query($base,$editpro);			
+	}
+		
+	public function set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		$bug_report->set_status($status);	
+		$bug_report->set_reviewer_id($reviewer_id);
+		$editpro = "UPDATE bug_report SET status='reviewed' WHERE bug_id=".$bug_report_id."";
+        $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$reviewer_id."";
+        $upd = mysqli_query($base,$addpoint);
+		$rq = mysqli_query($base,$editpro);	
+	}
+		
+}
+
+
+
 	 
  ?>
