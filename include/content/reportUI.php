@@ -1,9 +1,12 @@
 <?php
-    $bestdev = "SELECT * FROM user inner join user_developer on user.user_id=developer_id order by bugs_fixed DESC LIMIT 1";
+    include("classes.php");
+	$generate_report_page = new generate_report_page();
+	$dev = $generate_report_page->generate_best_developer($base);
+	//$bestdev = "SELECT * FROM user inner join user_developer on user.user_id=developer_id order by bugs_fixed DESC LIMIT 1";
     $bestrev = "SELECT * FROM user inner join user_reviewer on user.user_id=reviewer_id order by bugs_resolved DESC LIMIT 1";
     $besttri = "SELECT * FROM user inner join user_triager on user.user_id=triager_id order by bugs_closed DESC LIMIT 1";
 
-    $dev = $base->query($bestdev)->fetch_array();
+    //$dev = $base->query($bestdev)->fetch_array();
     $rev = $base->query($bestrev)->fetch_array();
     $tri = $base->query($besttri)->fetch_array();
 ?>

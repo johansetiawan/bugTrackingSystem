@@ -54,6 +54,8 @@ class login_controller{
 			  $user_triager = new user_triager($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 		      else if($user_type=="Reporter")
 			  $user_reporter = new user_reporter($this->base,$user_id,$email,$user_password,$full_name,$user_type);
+			  else if($user_type=="admin")
+			  $user_reporter = new user_admin($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
               $result = $this->base->query($reqnumlogin);  
               $numLOGIN = $result->fetch_row(); 
@@ -148,6 +150,13 @@ public function get_user_type()
 {
 	return $this->user_type;
 }
+
+public function delete_user_from_user_list()
+{
+	$this->base->query("DELETE FROM user WHERE user_id=".$this->user_id."");	
+}
+	
+}
 /*
 public function logout()
 {
@@ -190,7 +199,6 @@ public function search_bug_report_by_keyword($base){
 		return $allproduit;
 }
 */
-}
 
 class user_reviewer extends user{
 
@@ -248,6 +256,10 @@ public function set_expertise($value){
 	$this->$expertise=$value;
 }
 
+public function find_best_developer($base){
+	$bestdev = "SELECT * FROM user inner join user_developer on user.user_id=developer_id order by bugs_fixed DESC LIMIT 1";
+	return $dev = $base->query($bestdev)->fetch_array();
+}
 
 }
 
@@ -278,6 +290,38 @@ public function set_no_of_bug_report_closed($value){
 
 
 class user_reporter extends user{
+
+protected $roles=NULL;
+protected $bugs_reported=NULL;
+function __construct($base,$user_id,$email,$password,$full_name,$user_type)
+{
+	$this->base = $base;
+	$this->user_id = $user_id;
+	$this->email = $email;
+	$this->password = $password;
+	$this->full_name = $full_name;
+	$this->user_type = $user_type;
+}
+
+public function get_roles(){
+	return $this->roles;
+}
+
+public function set_roles($value){
+	$this->$roles=$value;
+}
+
+public function get_no_of_bugs_reported(){
+	return $this->bugs_reported;
+}
+
+public function set_no_of_bugs_reported($value){
+	$this->$bugs_reported=$value;
+}
+
+}
+
+class user_administrator extends user{
 
 protected $roles=NULL;
 protected $bugs_reported=NULL;
@@ -856,6 +900,128 @@ class bug_report_detail_controller{
 		
 }
 
+class generate_report_page{
+	public function generate_best_developer($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_best_developer($base);
+	}
+}
+
+
+
+class generate_report_controller{
+	public function get_best_developer($base){
+		$user_developer = new user_developer($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $user_developer->find_best_developer($base);		
+	}
+}
+
+class bug_comment_page{
+	public function comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created){
+	$bug_comment_controller = new bug_comment_controller();
+	$bug_comment_controller->set_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);		
+	}
+	
+	
+}
+
+
+class bug_comment_controller{
+	public function set_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created){
+		$user_comment = new comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);
+		$addpro = "INSERT INTO comment(comment, bug_id,user_id) VALUES ('$comment', '$bug_report_id','$user_id' )";
+        $rq = mysqli_query($base,$addpro);
+	}
+	
+	
+}
+
+
+class comment{
+private $base = NULL;
+protected $comment_id = NULL;
+protected $user_id = NULL;
+protected $bug_report_id=NULL;
+protected $comment=NULL;
+protected $ts_created=NULL;
+
+
+function __construct($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created){
+	$this->base=$base;
+	$this->comment_id=$comment_id;
+	$this->user_id=$user_id;
+	$this->bug_report_id=$bug_report_id;
+	$this->comment=$comment;
+	$this->ts_created=$ts_created;
+	
+}
+
+public function get_comment_id(){
+	return $this->comment_id;
+}
+
+public function set_comment_id($value){
+	$this->comment_id=$value;
+}
+
+public function get_comment_user_id(){
+	return $this->user_id;
+}
+
+public function set_comment_user_id($value){
+	$this->user_id=$value;
+}
+
+public function get_comment_bug_report_id(){
+	return $this->bug_report_id;
+	
+}
+
+public function set_comment_bug_report_id($value){
+	
+	$this->bug_report_id=$value;
+}
+
+public function get_comment(){
+	return $this->comment;
+	
+}
+
+public function set_comment($value){
+
+	$this->comment=$value;
+}
+
+public function get_ts_created(){
+	return $this->ts_created;
+	
+}
+
+public function set_ts_created($value){
+	
+	$this->ts_created=$value;
+}
+
+
+}
+
+
+class user_list_page{
+	public function delete_user($base,$user_id){
+	$user_list_controller = new user_list_controller();
+	$user_list_controller->find_and_delete_user($base,$user_id);
+	}	
+}
+
+
+class user_list_controller{
+	public function find_and_delete_user($base,$user_id){
+	$user = new user($base,$user_id,NULL,NULL,NULL,NULL);
+	$user->delete_user_from_user_list();
+		
+	}
+	
+}
 
 
 	 
