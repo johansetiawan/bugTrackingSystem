@@ -55,7 +55,7 @@ class login_controller{
 		      else if($user_type=="Reporter")
 			  $user_reporter = new user_reporter($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 			  else if($user_type=="admin")
-			  $user_reporter = new user_admin($this->base,$user_id,$email,$user_password,$full_name,$user_type);
+			  $user_administrator = new user_administrator($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
               $result = $this->base->query($reqnumlogin);  
               $numLOGIN = $result->fetch_row(); 
