@@ -845,9 +845,9 @@ class report_bug_controller{
 
 class bug_report_detail_page{
 	
-	public function change_bug_report_status_triager($base,$status,$triager_id,$developer_id,$bug_report_id){
+	public function change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id){
 		$bug_report_detail_controller = new bug_report_detail_controller();
-		$bug_report_detail_controller->set_bug_report_status_triager($base,$status,$triager_id,$developer_id,$bug_report_id);		
+		$bug_report_detail_controller->set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id);		
 	}
 	
 	public function change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id){
@@ -859,18 +859,22 @@ class bug_report_detail_page{
 		$bug_report_detail_controller = new bug_report_detail_controller();
 		$bug_report_detail_controller->set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id);		
 	}
-		
+	
+	
+	public function assign_developer($base,$developer_id,$bug_report_id){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_assignee($base,$developer_id,$bug_report_id,);		
+	}	
 	
 }
 
 class bug_report_detail_controller{
 	
-	public function set_bug_report_status_triager($base,$status,$triager_id,$developer_id,$bug_report_id){
+	public function set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		$bug_report->set_status($status);	
 		$bug_report->set_triager_id($triager_id);
-		$bug_report->set_developer_id($developer_id);
-		$editpro = "UPDATE bug_report SET status='".$status."',developer_id='".$developer_id."', triager_id ='".$triager_id."' WHERE bug_id=".$bug_report_id."";
+		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."' WHERE bug_id=".$bug_report_id."";
         if($status == "closed")
         {
             $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$triager_id."";
@@ -895,6 +899,13 @@ class bug_report_detail_controller{
 		$editpro = "UPDATE bug_report SET status='reviewed' WHERE bug_id=".$bug_report_id."";
         $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$reviewer_id."";
         $upd = mysqli_query($base,$addpoint);
+		$rq = mysqli_query($base,$editpro);	
+	}
+	
+	public function set_bug_report_assignee($base,$developer_id,$bug_report_id){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		$bug_report->set_developer_id($developer_id);
+		$editpro = "UPDATE bug_report SET developer_id='".$developer_id."' WHERE bug_id=".$bug_report_id."";
 		$rq = mysqli_query($base,$editpro);	
 	}
 		
