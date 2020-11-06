@@ -12,7 +12,7 @@ if (isset($_POST['submit'])) {
                 $ts_created = date("Y-m-d H:i:s");
 				$bug_comment_page = new bug_comment_page();
 				$bug_comment_page->comment($base,NULL,$uid,$id,$descproduit,$ts_created);
-				
+				echo "<meta http-equiv='refresh' content='0'>";
               //echo $_POST['descproduit'].'<hr>'.$descproduit;
               //die();
             

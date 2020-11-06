@@ -1,5 +1,7 @@
 
  <?php
+
+ 
  
  class login_UI{
 	 private $base = NULL;
@@ -59,9 +61,9 @@ class login_controller{
 			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
               $result = $this->base->query($reqnumlogin);  
               $numLOGIN = $result->fetch_row(); 
-  
+			  $login_UI = new login_UI($this->base);
               if ($numLOGIN['0'] == 1) {
-				  $login_UI = new login_UI($this->base);
+				  
                   if ($password == $user_password) {
 					$this->redirect_home($user_email);
                     }else{
