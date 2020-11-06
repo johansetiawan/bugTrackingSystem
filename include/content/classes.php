@@ -847,19 +847,19 @@ class report_bug_controller{
 
 class bug_report_detail_page{
 	
-	public function change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id){
+	public function change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts){
 		$bug_report_detail_controller = new bug_report_detail_controller();
-		$bug_report_detail_controller->set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id);		
+		$bug_report_detail_controller->set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts);		
 	}
 	
-	public function change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id){
+	public function change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified){
 		$bug_report_detail_controller = new bug_report_detail_controller();
-		$bug_report_detail_controller->set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id);		
+		$bug_report_detail_controller->set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified);		
 	}
 	
-	public function change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id){
+	public function change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified){
 		$bug_report_detail_controller = new bug_report_detail_controller();
-		$bug_report_detail_controller->set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id);		
+		$bug_report_detail_controller->set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified);		
 	}
 	
 	
@@ -872,11 +872,14 @@ class bug_report_detail_page{
 
 class bug_report_detail_controller{
 	
-	public function set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id){
+	public function set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		$bug_report->set_status($status);	
 		$bug_report->set_triager_id($triager_id);
-		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."' WHERE bug_id=".$bug_report_id."";
+		if($status=='closed')
+		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_closed='".$ts."' WHERE bug_id=".$bug_report_id."";
+		else
+		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_modified='".$ts."' WHERE bug_id=".$bug_report_id."";
         if($status == "closed")
         {
             $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$triager_id."";
@@ -885,20 +888,20 @@ class bug_report_detail_controller{
 		$rq = mysqli_query($base,$editpro);		
 	}
 	
-	public function set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id){
+	public function set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		$bug_report->set_status($status);	
-		$editpro = "UPDATE bug_report SET status='fixed' WHERE bug_id=".$bug_report_id."";
+		$editpro = "UPDATE bug_report SET status='fixed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
         $addpoint = "UPDATE user_developer set bugs_fixed = bugs_fixed+1 WHERE developer_id =".$developer_id."";
         $upd = mysqli_query($base,$addpoint);
 		$rq = mysqli_query($base,$editpro);			
 	}
 		
-	public function set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id){
+	public function set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		$bug_report->set_status($status);	
 		$bug_report->set_reviewer_id($reviewer_id);
-		$editpro = "UPDATE bug_report SET status='reviewed' WHERE bug_id=".$bug_report_id."";
+		$editpro = "UPDATE bug_report SET status='reviewed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
         $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$reviewer_id."";
         $upd = mysqli_query($base,$addpoint);
 		$rq = mysqli_query($base,$editpro);	

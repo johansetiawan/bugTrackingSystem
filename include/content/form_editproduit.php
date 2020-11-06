@@ -1,6 +1,7 @@
 
   <?php
     include("classes.php");
+	date_default_timezone_set('Asia/Singapore');
 	$idproduit = $_GET['num'];
 	$data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
     $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
@@ -32,22 +33,25 @@
 		  
 		 if ($_SESSION['user']['user_type'] == "Triager"){
 			  $triager_id = $_SESSION['user']['user_id'];
+			  $ts = date('Y-m-d H:i:s');
 			  $bug_report_detail_page=new bug_report_detail_page();
-			  $bug_report_detail_page->change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id);           	  
+			  $bug_report_detail_page->change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts);           	  
           }
 		  
           else if($_SESSION['user']['user_type'] == "Developer")
           {			  
 			  $developer_id = $_SESSION['user']['user_id'];
+			  $ts_modified = date('Y-m-d H:i:s');
 			  $bug_report_detail_page=new bug_report_detail_page();
-			  $bug_report_detail_page->change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id);			  
+			  $bug_report_detail_page->change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified);			  
               
           }
           else if($_SESSION['user']['user_type'] == "Reviewer")
           {			
 			 $reviewer_id = $_SESSION['user']['user_id'];
-			  $bug_report_detail_page=new bug_report_detail_page();
-			  $bug_report_detail_page->change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id);     
+			 $ts_modified = date('Y-m-d H:i:s');
+			  $bug_report_detail_page=new bug_report_detail_page();			  
+			  $bug_report_detail_page->change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified);     
           }
           else
           {
