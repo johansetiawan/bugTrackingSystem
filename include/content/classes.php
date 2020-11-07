@@ -26,6 +26,10 @@
 		echo "<p class='alert error'><b>Login Fail!</b></p>";
 	}
 	 
+	public function redirect_login()
+	{
+		header("location:login.php?logout=true");
+	}
  }
  
  
@@ -39,7 +43,7 @@ class login_controller{
 	}
 	
 	
-	 public function verify_login($email,$password)
+	public function verify_login($email,$password)
 	{       
 			  $data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
 			  $datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
@@ -48,44 +52,19 @@ class login_controller{
 			  $user_password = $datauser['password'];
 			  $full_name = $datauser['full_name'];
 			  $user_type =$datauser['user_type'];
-			  if($user_type == "Reviewer")
-			  $user_reviewer = new user_reviewer($this->base,$user_id,$email,$user_password,$full_name,$user_type);
-		      else if($user_type=="Developer")
-			  $user_developer = new user_developer($this->base,$user_id,$email,$user_password,$full_name,$user_type);
-		      else if($user_type=="Triager")
-			  $user_triager = new user_triager($this->base,$user_id,$email,$user_password,$full_name,$user_type);
-		      else if($user_type=="Reporter")
-			  $user_reporter = new user_reporter($this->base,$user_id,$email,$user_password,$full_name,$user_type);
-			  else if($user_type=="admin")
-			  $user_administrator = new user_administrator($this->base,$user_id,$email,$user_password,$full_name,$user_type);
-			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
-              $result = $this->base->query($reqnumlogin);  
-              $numLOGIN = $result->fetch_row(); 
+			  $user = new user($this->base,$user_id,$email,$user_password,$full_name,$user_type);
+			  $result = $user->verify_user($email,$password);
 			  $login_UI = new login_UI($this->base);
-              if ($numLOGIN['0'] == 1) {
+			  if($result==1){
+				$home_page=new home_page;
+				$home_page->redirect_home($this->base,$user_email);
+			  }
+			 else if($result==NULL){
+			$login_UI->display_fail();				  				  
+			 }
 				  
-                  if ($password == $user_password) {
-					$this->redirect_home($user_email);
-                    }else{
-                        $login_UI->display_fail();
-                    }
-                }else{
-                 $login_UI->display_fail();
-                }
-
 	}
 
-	public function redirect_home($email)
-	{
-		$data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
-        $datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
-        $_SESSION['user'] = $datauser;
-        if ($_SESSION['user']['user_type'] == "Reporter") {
-              header('Location: admin.php');
-        }else{
-              header('Location: user.php');
-        }		
-	}
 }
  
  
@@ -157,50 +136,42 @@ public function delete_user_from_user_list()
 {
 	$this->base->query("DELETE FROM user WHERE user_id=".$this->user_id."");	
 }
+
+	public function verify_user($email,$password)
+	{       
+			  $data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
+			  $datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
+			  $user_id =$datauser['user_id'];
+			  $user_email = $datauser['email'];
+			  $user_password = $datauser['password'];
+			  $full_name = $datauser['full_name'];
+			  $user_type =$datauser['user_type'];
+			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
+              $result = $this->base->query($reqnumlogin);  
+              $numLOGIN = $result->fetch_row(); 			  
+              if ($numLOGIN['0'] == 1) {
+				  
+                  if ($password == $user_password) {
+					return 1;					
+                    }else{
+                        return NULL;
+                    }
+                }else{
+				 return NULL;
+                }
+	}
+
+
+	public function retrieve_user_details($base,$user_id){
+		
+		$data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$user_id."'";
+		$datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+		return $datauser;
+	}
+
+
 	
 }
-/*
-public function logout()
-{
-    echo '<a href="login.php?logout=true"> <i class="ion ion-power"></i> Logout</a>';
-}
-*//*
-public function search_bug_report_by_title($base){
-		$search = mysqli_real_escape_string($base,$_POST['search']);
-        $type = mysqli_real_escape_string($base,$_POST['type']);
-        
-        $allproduit = "SELECT * FROM `bug_report` where  title = '$search'";
-        
-		return $allproduit;
-}
-
-public function search_bug_report_by_assignee($base){
-		$search = mysqli_real_escape_string($base,$_POST['search']);
-        $type = mysqli_real_escape_string($base,$_POST['type']);
-		
-        $allproduit = "SELECT * FROM `user` as a inner join `bug_report` as b on b.developer_id = a.user_id where a.full_name = '$search'";
-		
-		return $allproduit;
-}
-
-public function search_bug_report_by_status($base){
-		$search = mysqli_real_escape_string($base,$_POST['search']);
-        $type = mysqli_real_escape_string($base,$_POST['type']);
-        
-        $allproduit = "SELECT * FROM `bug_report` where  status = '$search'";
-        
-		return $allproduit;
-}
-
-public function search_bug_report_by_keyword($base){
-		$search = mysqli_real_escape_string($base,$_POST['search']);
-        $type = mysqli_real_escape_string($base,$_POST['type']);
-        
-        $allproduit = "SELECT * FROM `bug_report` where  keyword = '$search'";
-        
-		return $allproduit;
-}
-*/
 
 class user_reviewer extends user{
 
@@ -369,6 +340,18 @@ class home_page{
 		 $home_controller->end_session();
 	}
 	
+	public function redirect_home($base,$email)
+	{
+		$data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
+        $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+        $_SESSION['user'] = $datauser;
+        if ($_SESSION['user']['user_type'] == "Reporter") {
+              header('Location: admin.php');
+        }else{
+              header('Location: user.php');
+        }		
+	}
+	
 	
 }
 
@@ -378,12 +361,8 @@ class home_controller{
 	public function end_session()
 	{
 		 session_destroy();
-		 $this->redirect_login();
-	}
-	
-	public function redirect_login()
-	{
-		header("location:login.php?logout=true");
+		 $login_UI = new login_UI(NULL);
+		 $login_UI->redirect_login();
 	}
 	
 	public function get_user_details($base,$user_id){
@@ -395,15 +374,8 @@ class home_controller{
 		$user_password = $datauser['password'];
 		$full_name = $datauser['full_name'];
 		$user_type =$datauser['user_type'];
-		if($user_type == "Reviewer")
-		$user_reviewer = new user_reviewer($base,$user_id,$user_email,$user_password,$full_name,$user_type);
-		else if($user_type=="Developer")
-		$user_developer = new user_developer($base,$user_id,$user_email,$user_password,$full_name,$user_type);
-		else if($user_type=="Triager")
-		$user_triager = new user_triager($base,$user_id,$user_email,$user_password,$full_name,$user_type);
-		else if($user_type=="Reporter")
-		$user_reporter = new user_reporter($base,$user_id,$user_email,$user_password,$full_name,$user_type);
-		return $datauser;
+		$user = new user($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+		return $user->retrieve_user_details($base,$user_id);
 	}
 	
 	
@@ -444,14 +416,7 @@ public function validate_user_info($base,$email, $password,$full_name, $user_typ
               if ($numemail['0'] == 0) {
 
                    if ($password == $repassword) {
-                        if($user_type == "Reviewer")
-						$user_reviewer = new user_reviewer($base,NULL,$email,$password,$full_name,$user_type);
-						else if($user_type=="Developer")
-						$user_developer = new user_developer($base,NULL,$email,$password,$full_name,$user_type);
-						else if($user_type=="Triager")
-						$user_triager = new user_triager($base,NULL,$email,$password,$full_name,$user_type);
-						else if($user_type=="Reporter")
-						$user_reporter = new user_reporter($base,NULL,$email,$password,$full_name,$user_type);                        
+						$user = new user($base,NULL,$email,$password,$full_name,$user_type);                     
 						$req = "INSERT INTO `user` (`full_name`, `EMAIL`, `password`,`user_type`) VALUES ('$full_name','$email', '$password','$user_type')";
                         $rq = mysqli_query($base,$req);						
 						$register_page->display_success();                      
@@ -462,10 +427,9 @@ public function validate_user_info($base,$email, $password,$full_name, $user_typ
 
               }else{
 				  $register_page->display_error(); 
-              }	
+              }
 }
 
-public function redirect_login(){}
 	
 }
 
@@ -733,6 +697,11 @@ public function remove_bug_report_from_database($base,$bug_report_id){
     } 
 }
 
+public function bug_report_details($base,$bug_report_id){
+	$data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$bug_report_id."'";
+	return $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+}
+
 }
 	
 
@@ -772,6 +741,10 @@ class bug_report_list_page{
 		$bug_report_list_controller = new bug_report_list_controller();
 		$bug_report_list_controller->remove_bug_report($base,$bug_report_id);
 	}
+			
+	public function redirect_bug_report_list(){
+		header('Location: list_produit.php');	
+	}
 	
 }
 
@@ -809,15 +782,7 @@ class bug_report_list_controller{
 		return $bug_report->retrieve_all_bug_report_assigned_to_me($base,$developer_id); 		
 	}
 	
-	public function remove_bug_report($base,$bug_report_id){
-		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-		$bug_report->remove_bug_report_from_database($base,$bug_report_id);
-		$this->redirect_bug_report_list();
-	}
-	
-	public function redirect_bug_report_list(){
-		header('Location: list_produit.php');	
-	}
+
 }
 
 
@@ -847,6 +812,12 @@ class report_bug_controller{
 
 class bug_report_detail_page{
 	
+	public function display_bug_report_detail($base,$bug_report_id){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		return $bug_report_detail_controller->get_bug_report_details($base,$bug_report_id);
+		
+	}
+	
 	public function change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts){
 		$bug_report_detail_controller = new bug_report_detail_controller();
 		$bug_report_detail_controller->set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts);		
@@ -872,6 +843,11 @@ class bug_report_detail_page{
 
 class bug_report_detail_controller{
 	
+	public function get_bug_report_details($base,$bug_report_id){
+			$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+			return $bug_report->bug_report_details($base,$bug_report_id);				
+	}
+		
 	public function set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		$bug_report->set_status($status);	
@@ -887,7 +863,9 @@ class bug_report_detail_controller{
             $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$triager_id."";
             $upd = mysqli_query($base,$addpoint);
         }
-		$rq = mysqli_query($base,$editpro);		
+		$rq = mysqli_query($base,$editpro);
+		$bug_report_list_page=new bug_report_list_page();
+		$bug_report_list_page->redirect_bug_report_list();
 	}
 	
 	public function set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified){
@@ -896,7 +874,9 @@ class bug_report_detail_controller{
 		$editpro = "UPDATE bug_report SET status='fixed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
         $addpoint = "UPDATE user_developer set bugs_fixed = bugs_fixed+1 WHERE developer_id =".$developer_id."";
         $upd = mysqli_query($base,$addpoint);
-		$rq = mysqli_query($base,$editpro);			
+		$rq = mysqli_query($base,$editpro);		
+		$bug_report_list_page=new bug_report_list_page();
+		$bug_report_list_page->redirect_bug_report_list();
 	}
 		
 	public function set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified){
@@ -906,7 +886,9 @@ class bug_report_detail_controller{
 		$editpro = "UPDATE bug_report SET status='reviewed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
         $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$reviewer_id."";
         $upd = mysqli_query($base,$addpoint);
-		$rq = mysqli_query($base,$editpro);	
+		$rq = mysqli_query($base,$editpro);
+		$bug_report_list_page=new bug_report_list_page();
+		$bug_report_list_page->redirect_bug_report_list();
 	}
 	
 	public function set_bug_report_assignee($base,$developer_id,$bug_report_id){
@@ -914,6 +896,8 @@ class bug_report_detail_controller{
 		$bug_report->set_developer_id($developer_id);
 		$editpro = "UPDATE bug_report SET developer_id='".$developer_id."' WHERE bug_id=".$bug_report_id."";
 		$rq = mysqli_query($base,$editpro);	
+		$bug_report_list_page=new bug_report_list_page();
+		$bug_report_list_page->redirect_bug_report_list();
 	}
 		
 }

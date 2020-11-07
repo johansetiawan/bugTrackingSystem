@@ -3,10 +3,12 @@
     include("classes.php");
 	date_default_timezone_set('Asia/Singapore');
 	$idproduit = $_GET['num'];
-	$data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
-    $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+	
+	$bug_report_detail_page=new bug_report_detail_page();
+	$dataproduit = $bug_report_detail_page->display_bug_report_detail($base,$idproduit);
 	$alldev = "SELECT * FROM user where user_type ='Developer'";
-    $devs = $base->query($alldev); 
+    $devs = $base->query($alldev);
+	
       if (isset($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == "Triager" || $_SESSION['user']['user_type'] == "Developer" || $_SESSION['user']['user_type'] == "Reviewer") {
           ///
@@ -61,7 +63,6 @@
               
              // $rq = mysqli_query($base,$editpro);
             //echo "<p class='alert error'><b>$editpro</b> error</p>";
-            header('Location:list_produit.php');
         
       }
   ?>
