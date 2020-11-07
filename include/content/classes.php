@@ -878,6 +878,8 @@ class bug_report_detail_controller{
 		$bug_report->set_triager_id($triager_id);
 		if($status=='closed')
 		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_closed='".$ts."' WHERE bug_id=".$bug_report_id."";
+		else if($status=='invalid'||$status=='duplicate')
+		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_modified='".$ts."',ts_closed='".$ts."' WHERE bug_id=".$bug_report_id."";
 		else
 		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_modified='".$ts."' WHERE bug_id=".$bug_report_id."";
         if($status == "closed")

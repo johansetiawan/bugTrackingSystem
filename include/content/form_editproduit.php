@@ -97,7 +97,9 @@
             <option value="open">open</option>
             <option value="fixed">fixed</option> 
             <option value="reviewed">reviewed</option> 
-            <option value="closed">closed</option> 
+            <option value="closed">closed</option>
+			<option value="invalid">invalid</option> 
+			<option value="duplicate">duplicate</option> 
         </select>
         <?php }?>
 	</div> 

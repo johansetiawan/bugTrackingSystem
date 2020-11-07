@@ -80,7 +80,6 @@ if(isset($_POST['show']))
     <?php  if (isset($_SESSION['user'])) {
     if ($_SESSION['user']['user_type'] == "Triager" || $_SESSION['user']['user_type'] == "Developer" || $_SESSION['user']['user_type'] == "Reviewer") { ?> 
     <div class="paneloption">
-        <a href="delete_produit.php?num=<?php echo $produit['bug_id'];?>" class="delete"><i class="ion ion-trash-a"></i></a>
         <a href="editproduit.php?num=<?php echo $produit['bug_id'];?>" class="edit"><i class="ion ion-edit"></i></a>
     </div>
     <?php } } ?>
