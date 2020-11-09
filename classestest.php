@@ -54,11 +54,91 @@ use PHPUnit\Framework\TestCase;
 			//$this->assertSame($expected_user_type,$user_type);			
 			
 		}
+        public function testlogout(){
+            $test_user=new home_page();
+            $test = $test_user->log_out();
+			$expected=1;
+			$this->assertSame($expected,$test);
+        }
+        
+        public function testbug_report(){
+            $base= mysqli_connect('localhost', 'root', '', 'roger_db');
+            $test_report=new report_bug_controller();
+            $test = $test_report->validate_bug_report($base,"1","title","desc","key","1","1");
+			$expected=1;
+			$this->assertSame($expected,$test);
+        }
+        
+        public function testcomment(){
+            $base= mysqli_connect('localhost', 'root', '', 'roger_db');
+            $test_report=new bug_comment_controller();
+            $test = $test_report->set_comment($base,"1","1","1","comment","2020-10-14 23:08:54");
+			$expected=1;
+			$this->assertSame($expected,$test);
+        }
+        public function register(){
+            $base= mysqli_connect('localhost', 'root', '', 'roger_db');
+            $test_report=new register_controller();
+            $test = $test_report->validate_user_info($base,"email@1.com","password","name","Triager","password");
+			$expected=1;
+			$this->assertSame($expected,$test);
+        }
 		
 		
 	}
 	
+	class bug_comment_controller{
+	public function set_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created){
+        try{
+		$user_comment = new comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);
+		$addpro = "INSERT INTO comment(comment, bug_id,user_id) VALUES ('$comment', '$bug_report_id','$user_id' )";
+        $rq = mysqli_query($base,$addpro);
+        return 1;
+            
+        }
+        catch (Exception $e)
+        {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            return 0;
+        }
+	}
 	
+	
+}
+    
+
+    class register_controller{
+
+	
+public function validate_user_info($base,$email, $password,$full_name, $user_type,$repassword){
+	  $register_page=new register_page;
+	  $reqnumemail = "SELECT count(user_id) FROM user WHERE EMAIL LIKE '".$email."'";
+              $result = $base->query($reqnumemail);  
+              $numemail = $result->fetch_row(); 
+  
+              if ($numemail['0'] == 0) {
+
+                   if ($password == $repassword) {
+						$user = new user($base,NULL,$email,$password,$full_name,$user_type);                     
+						$req = "INSERT INTO `user` (`full_name`, `EMAIL`, `password`,`user_type`) VALUES ('$full_name','$email', '$password','$user_type')";
+                        $rq = mysqli_query($base,$req);						
+						//$register_page->display_success();
+                       return 1;
+
+                  }else{
+                       return 0;
+					  //$register_page->display_error();                      
+                  }
+
+              }else{
+                  return 0;
+				  //$register_page->display_error(); 
+              }
+}
+
+	
+}
+
 	class login_UI{
 	 private $base = NULL;
 	 
@@ -84,7 +164,52 @@ use PHPUnit\Framework\TestCase;
 	 
  }
  
- 
+class report_bug_controller{
+	
+	public function validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority){
+		 if (!empty($title) && !empty($description)&& !empty($keyword)&& !empty($version_no)&& !empty($priority)) {
+			  $bug_report=new bug_report($base, NULL, $reporter_id, NULL, NULL, NULL, $title, $description, $keyword, $version_no, NULL, $priority, NULL, NULL, NULL);
+			  $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`keyword`,`version_no`,`priority`) VALUES ('$reporter_id','$title','$description','$keyword','$version_no','$priority')";
+			  $rq = mysqli_query($base,$addpro);
+			  die("<p class='alert success'>.$addpro Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
+             return 1;
+        }else{
+            echo "<p class='alert error'><b>Attention !</b> error</p>";
+             return 0;
+        }	
+	}
+	
+}	
+
+class home_page{
+	
+	public function display_user_details($base,$user_id){
+		$home_controller = new home_controller();
+		return $home_controller->get_user_details($base,$user_id);
+	}
+	
+	public function log_out()
+	{
+		 $home_controller = new home_controller();
+		 $home_controller->end_session();
+         return 1;
+	}
+	
+	public function redirect_home($base,$email)
+	{
+		$data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
+        $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+        $_SESSION['user'] = $datauser;
+        if ($_SESSION['user']['user_type'] == "Reporter") {
+              header('Location: admin.php');
+        }else{
+              header('Location: user.php');
+        }		
+	}
+	
+	
+}
+
 class login_controller{
 	
 	
