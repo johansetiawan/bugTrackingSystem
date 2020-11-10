@@ -90,7 +90,7 @@
 	
 	<form method="post" action="">
 	<div class="cont">
-	<?php if ($_SESSION['user']['user_type'] == "Triager" || $_SESSION['user']['user_type'] == "Reviewer"){?>
+	<?php if ($_SESSION['user']['user_type'] == "Triager"){?>
 		<b>Status :</b>
 			<select id="status" name="status">
 				<option value="open">Open</option>
@@ -100,7 +100,8 @@
 				<option value="invalid">Invalid</option> 
 				<option value="duplicate">Duplicate</option> 
 			</select>
-		<input type="submit" name="submit" value="Update Status">
-	<?php }?>	
+		
+	<?php }?>
+	<input type="submit" name="submit" value="Update Status">
 	</div> 
 	</form>
