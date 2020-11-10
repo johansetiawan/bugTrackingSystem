@@ -11,7 +11,7 @@
     $tri = $base->query($besttri)->fetch_array();
 ?>
 
-<div>
+<div style="width: 50%;">
     <table>
         <tr>
             <th>

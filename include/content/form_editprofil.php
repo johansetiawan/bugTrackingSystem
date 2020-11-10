@@ -42,11 +42,11 @@
 <table >  
   <tr> <td colspan="2"><br>  </td></tr> 
   <tr>
-    <td><p> Full_Name* : <p> </td>
+    <td><p> Full Name* : <p> </td>
     <td><?php echo $_SESSION['user']['full_name'];?></td> 
   </tr>  
   <tr>
-    <td><p>email  : <p></td>  
+    <td><p>Email  : <p></td>  
     <td> <input name="email" type="email" value="<?php echo $_SESSION['user']['email'];?>"/> </td> 
   </tr>
   <tr>
@@ -56,7 +56,7 @@
     </td> 
   </tr>  
   <tr>
-    <td colspan="2"><input type="submit" name="submit" value="Modifier" /></td>
+    <td colspan="2"><input type="submit" name="submit" value="Update" /></td>
   </tr>  
 
 </table> 

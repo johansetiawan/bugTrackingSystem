@@ -71,39 +71,36 @@
 	<div class="cont">
 		<b>Time posted : </b><?php echo $dataproduit['ts_created']; ?><br><br>
 		<b>Description :</b><br><p><?php echo $dataproduit['description']; ?></p><br><br>
-        <b>Version No :</b> <?php echo $dataproduit['version_no']; ?><br><br>
-        <b>status :</b> <?php echo $dataproduit['status']; ?><br><br>
-        <b>priority :</b> <?php echo $dataproduit['priority']; ?><br><br>
+        <b>Version Number :</b> <?php echo $dataproduit['version_no']; ?><br><br>
+        <b>Status :</b> <?php echo $dataproduit['status']; ?><br><br>
+        <b>Priority :</b> <?php echo $dataproduit['priority']; ?><br><br>
 	</div>
-	  <form method="post" action="">
-   <?php if ($_SESSION['user']['user_type'] == "Triager"){ ?>
+	<form method="post" action="">
+	<?php if ($_SESSION['user']['user_type'] == "Triager"){ ?>
 		<b>Devloper :</b>
         <select id="devid" name="devid">
             <?php
                 while($dev = $devs->fetch_array()) {?>
                    <option value="<?php echo $dev['user_id'];?>"><?php echo $dev['full_name']; ?></option> 
-                <?php }
-            ?>
+            <?php }?>
         </select>
 		<input type="submit" name="developer_submit" value="Change Developer">
-		</form>
-   
-  <form method="post" action="">
-<article>
+	</form>
+	<?php }?>
+	
+	<form method="post" action="">
 	<div class="cont">
-        <br><br>
-        <?php } if ($_SESSION['user']['user_type'] == "Triager"){?>
-        <b>status :</b>
-        <select id="status" name="status">
-            <option value="open">open</option>
-            <option value="fixed">fixed</option> 
-            <option value="reviewed">reviewed</option> 
-            <option value="closed">closed</option>
-			<option value="invalid">invalid</option> 
-			<option value="duplicate">duplicate</option> 
-        </select>
-        <?php }?>
+	<?php if ($_SESSION['user']['user_type'] == "Triager" || $_SESSION['user']['user_type'] == "Reviewer"){?>
+		<b>Status :</b>
+			<select id="status" name="status">
+				<option value="open">Open</option>
+				<option value="closed">Closed</option>
+				<option value="fixed">Fixed</option> 
+				<option value="reviewed">Reviewed</option> 
+				<option value="invalid">Invalid</option> 
+				<option value="duplicate">Duplicate</option> 
+			</select>
+		<input type="submit" name="submit" value="Update Status">
+	<?php }?>	
 	</div> 
-	<input type="submit" name="submit" value="Modify">
-</article>
-</form>
+	</form>
