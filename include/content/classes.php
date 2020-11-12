@@ -17,7 +17,7 @@
 		if (!empty($email) && !empty($password)) {
          $login_controller->verify_login($email,$password);     			
         }else{
-            echo "<p class='alert error'><b>Attention !</b> put something ah sial</p>";
+            echo "<p class='alert error'><b>Attention !</b> Please do not leave blanks</p>";
           }
 	}
 
@@ -647,7 +647,7 @@ public function create_bug_report($base){
 
               $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`keyword`,`version_no`,`priority`) VALUES ('$reporterid','$nomproduit','$descproduit','$feature','$versiono','$priority')";
               $rq = mysqli_query($base,$addpro);
-            die("<p class='alert success'>.$addpro Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
+            die("<p class='alert success'>Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
         }else{
             echo "<p class='alert error'><b>Attention !</b> error</p>";
         }
