@@ -133,6 +133,24 @@ public function get_user_type()
 
 public function delete_user_from_user_list($user_id)
 {
+	$user_type=$this->base->query("SELECT * FROM user WHERE user_id=".$user_id."");
+	$user_type=$user_type->fetch_array();
+	if($user_type['user_type']=='Developer')
+	{
+		$this->base->query("DELETE FROM user_developer WHERE developer_id=".$user_id."");	
+	}
+	else if($user_type['user_type']=='Reporter')
+	{
+		$this->base->query("DELETE FROM user_reporter WHERE reporter_id=".$user_id."");	
+	}
+	else if($user_type['user_type']=='Triager')
+	{
+		$this->base->query("DELETE FROM user_triager WHERE triager_id=".$user_id."");	
+	}
+	else if($user_type['user_type']=='Reviewer')
+	{
+		$this->base->query("DELETE FROM user_reviewer WHERE reviewer_id=".$user_id."");	
+	}
 	$this->base->query("DELETE FROM user WHERE user_id=".$user_id."");	
 }
 
