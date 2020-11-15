@@ -6,7 +6,7 @@ $base= mysqli_connect($env->localhost, $env->root, $env->NULL, $env->roger_db);*
 
 
 
-
+session_start();
 	
 
     class Calculator{
@@ -61,7 +61,7 @@ use PHPUnit\Framework\TestCase;
 			$this->assertSame($expected,$test);
         }
         
-        public function testbug_report(){
+       /* public function testbug_report(){
             $base= mysqli_connect('localhost', 'root', '', 'roger_db');
             $test_report=new report_bug_controller();
             $test = $test_report->validate_bug_report($base,"1","title","desc","key","1","1");
@@ -75,7 +75,7 @@ use PHPUnit\Framework\TestCase;
             $test = $test_report->set_comment($base,"1","1","1","comment","2020-10-14 23:08:54");
 			$expected=1;
 			$this->assertSame($expected,$test);
-        }
+        }*/
         public function register(){
             $base= mysqli_connect('localhost', 'root', '', 'roger_db');
             $test_report=new register_controller();
@@ -181,6 +181,255 @@ class report_bug_controller{
 	
 }	
 
+class home_controller{
+		
+	public function end_session()
+	{
+		 session_destroy();
+		 return 1;
+		 //$login_UI = new login_UI(NULL);
+		 //$login_UI->redirect_login();
+	}
+	
+	public function get_user_details($base,$user_id){
+		
+		$data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$user_id."'";
+		$datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+		$user_id =$datauser['user_id'];
+		$user_email = $datauser['email'];
+		$user_password = $datauser['password'];
+		$full_name = $datauser['full_name'];
+		$user_type =$datauser['user_type'];
+		$user = new user($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+		return $user->retrieve_user_details($base,$user_id);
+	}
+	
+	
+}
+
+class bug_report{
+	
+private $base = NULL;
+private $bug_report_id =NULL;
+private $reporter_id = NULL;
+private $triager_id = NULL;
+private $developer_id = NULL;
+private $reviewer_id =NULL;
+private $title =NULL;
+private $description =NULL;
+private $keyword =NULL;
+private $version_no =NULL;
+private $status =NULL;
+private $priority =NULL;
+private $ts_created =NULL;
+private $ts_closed =NULL;
+private $ts_modified =NULL;
+
+function __construct($base, $bug_report_id, $reporter_id, $triager_id, $developer_id, $reviewer_id, $title, $description, $keyword, $version_no, $status, $priority, $ts_created, $ts_closed, $ts_modified){
+	$this->base=$base;
+	$this->bug_report_id=$bug_report_id;
+	$this->reporter_id=$reporter_id;
+	$this->triager_id=$triager_id;
+	$this->developer_id=$developer_id;
+	$this->developer_id=$developer_id;
+	$this->reviewer_id=$reviewer_id;
+	$this->title=$title;
+	$this->description=$description;
+	$this->keyword=$keyword;
+	$this->version_no=$version_no;
+	$this->status=$status;
+	$this->priority=$priority;
+	$this->ts_created=$ts_created;
+	$this->ts_closed=$ts_closed;
+	$this->ts_modified=$ts_modified;	
+}
+
+public function set_bug_report_id($value)
+{
+	$this->bug_report_id = $value;
+}
+public function set_reporter_id($value)
+{
+	$this->reporter_id = $value;
+}
+public function set_triager_id($value)
+{
+	$this->triager_id = $value;
+}
+public function set_developer_id($value)
+{
+	$this->developer_id = $value;
+}
+public function set_reviewer_id($value)
+{
+	$this->reviewer_id = $value;
+}
+public function set_title($value)
+{
+	$this->title = $value;
+}
+public function set_description($value)
+{
+	$this->description = $value;
+}
+public function set_keyword($value)
+{
+	$this->keyword = $value;
+}
+public function set_version_no($value)
+{
+	$this->version_no = $value;
+}
+public function set_status($value)
+{
+	$this->status = $value;
+}
+public function set_priority($value)
+{
+	$this->priority = $value;
+}
+public function set_ts_created($value)
+{
+	$this->ts_created = $value;
+}
+public function set_ts_closed($value)
+{
+	$this->ts_closed = $value;
+}
+public function set_ts_modified($value)
+{
+	$this->ts_modified = $value;
+}
+
+
+
+public function get_bug_report_id()
+{
+	return $this->bug_report_id;
+}
+public function get_reporter_id()
+{
+	return $this->reporter_id;
+}
+public function get_triager_id()
+{
+	return $this->triager_id;
+}
+public function get_developer_id()
+{
+	return $this->developer_id;
+}
+public function get_reviewer_id()
+{
+	return $this->reviewer_id;
+}
+public function get_title()
+{
+	return $this->title;
+}
+public function get_description()
+{
+	return $this->description;
+}
+public function get_keyword()
+{
+	return $this->keyword;
+}
+public function get_version_no()
+{
+	return $this->version_no;
+}
+public function get_status()
+{
+	return $this->status;
+}
+public function get_priority()
+{
+	return $this->priority;
+}
+public function get_ts_created()
+{
+	return $this->ts_created;
+}
+public function get_ts_closed()
+{
+	return $this->ts_closed;
+}
+public function get_ts_modified()
+{
+	return $this->ts_modified;
+}
+
+public function create_bug_report($base){
+   if (!empty($_POST['nomproduit']) && !empty($_POST['descproduit'])&& !empty($_POST['keyword'])&& !empty($_POST['versiono'])&& !empty($_POST['priority'])) {
+              
+              $reporterid = $_SESSION['user']['user_id'];
+              $nomproduit = mysqli_real_escape_string($base,$_POST['nomproduit']);
+              $descproduit = mysqli_real_escape_string($base,nl2br($_POST['descproduit']));
+              $feature = mysqli_real_escape_string($base,nl2br($_POST['keyword']));
+              $versiono = mysqli_real_escape_string($base,nl2br($_POST['versiono']));
+              $priority = mysqli_real_escape_string($base,nl2br($_POST['priority']));
+
+
+              $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`keyword`,`version_no`,`priority`) VALUES ('$reporterid','$nomproduit','$descproduit','$feature','$versiono','$priority')";
+              $rq = mysqli_query($base,$addpro);
+            die("<p class='alert success'>Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
+        }else{
+            echo "<p class='alert error'><b>Attention !</b> error</p>";
+        }
+}
+
+public function retrieve_all_bug_reports($base){      
+		$allproduit = "SELECT * FROM `bug_report`";
+		$produits = $base->query($allproduit);
+		return $produits;
+}	
+
+public function retrieve_bug_report_by_keyword($base,$keyword){      
+		$allproduit = "SELECT * FROM `bug_report` where  keyword = '$keyword'";
+		$produits = $base->query($allproduit);
+		return $produits;
+}	
+
+public function retrieve_bug_report_by_status($base,$status){      
+		$allproduit = "SELECT * FROM `bug_report` where  status = '$status'";
+		$produits = $base->query($allproduit);
+		return $produits;
+}
+
+public function retrieve_bug_report_by_title($base,$title){      
+		$allproduit = "SELECT * FROM `bug_report` where  title = '$title'";
+		$produits = $base->query($allproduit);
+		return $produits;
+}			
+
+public function retrieve_bug_report_by_assignee($base,$assignee){      
+		$allproduit = "SELECT * FROM `user` as a inner join `bug_report` as b on b.developer_id = a.user_id where a.full_name = '$assignee'";
+		$produits = $base->query($allproduit);
+		return $produits;
+}	
+
+public function retrieve_all_bug_report_assigned_to_me($base,$developer_id){      
+		$allproduit = "SELECT * FROM `bug_report` where developer_id = ".$developer_id;
+		$produits = $base->query($allproduit);
+		return $produits;
+}
+
+public function remove_bug_report_from_database($base,$bug_report_id){	
+    $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$bug_report_id."'";
+    $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+    if (!empty($dataproduit)) {
+        $base->query("DELETE FROM bug_report WHERE bug_id=".$bug_report_id."");
+    } 
+}
+
+public function bug_report_details($base,$bug_report_id){
+	$data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$bug_report_id."'";
+	return $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+}
+
+}
+
 class home_page{
 	
 	public function display_user_details($base,$user_id){
@@ -191,8 +440,7 @@ class home_page{
 	public function log_out()
 	{
 		 $home_controller = new home_controller();
-		 $home_controller->end_session();
-         return 1;
+		 return $home_controller->end_session();         
 	}
 	
 	public function redirect_home($base,$email)

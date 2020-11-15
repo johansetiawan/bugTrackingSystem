@@ -1,15 +1,15 @@
 
   <?php
         include "classes.php";
-      if (isset($_SESSION['user'])) {
+		$login_UI = new login_UI($base);
+		if (isset($_SESSION['user'])) {
         header('Location: index.php');
       }
 
       if (isset($_POST['submit'])) {
           
 			$email = $_POST['login'];
-			$password = $_POST['password'];
-            $login_UI = new login_UI($base);
+			$password = $_POST['password'];            
 			$login_UI->login($email,$password);
       }
   ?>

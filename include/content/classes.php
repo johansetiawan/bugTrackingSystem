@@ -2,7 +2,6 @@
  <?php
 
  
- 
  class login_UI{
 	 private $base = NULL;
 	 
@@ -132,9 +131,9 @@ public function get_user_type()
 	return $this->user_type;
 }
 
-public function delete_user_from_user_list()
+public function delete_user_from_user_list($user_id)
 {
-	$this->base->query("DELETE FROM user WHERE user_id=".$this->user_id."");	
+	$this->base->query("DELETE FROM user WHERE user_id=".$user_id."");	
 }
 
 	public function verify_user($email,$password)
@@ -169,6 +168,24 @@ public function delete_user_from_user_list()
 		return $datauser;
 	}
 
+	public function set_profile_details($base,$user_id,$email,$password){
+		if (!empty($email) && !empty($password)) {
+              //echo $_POST['descproduit'].'<hr>'.$descproduit; 
+              $editpro = "UPDATE user SET email='$email',PASSWORD='$password' WHERE user_id='$user_id'";
+              echo "<p class='alert error'><b>Attention !</b> $editpro</p>";
+             //die($editpro);
+              $rq = mysqli_query($base,$editpro);
+
+              $data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$_SESSION['user']['user_id']."'";
+              $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+              $_SESSION['user'] = $datauser;
+			  return 1;
+         }else{
+			 return 0;
+        }
+		
+		
+	}
 
 	
 }
@@ -432,16 +449,12 @@ public function validate_user_info($base,$email, $password,$full_name, $user_typ
 
 	
 }
-
+/*
 class edit_profile_page{
 	public function edit_profile($base,$password,$email,$user_id){
 		$edit_profile_controller=new edit_profile_controller();
 		$edit_profile_controller->validate_info($base,$password,$email,$user_id);
-	}
-	
-	
-	
-	
+	}	
 }
 
 
@@ -480,7 +493,7 @@ class edit_profile_controller{
 		
 }
 
-
+*/
 class bug_report{
 	
 private $base = NULL;
@@ -702,6 +715,17 @@ public function bug_report_details($base,$bug_report_id){
 	return $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
 }
 
+
+public function count_no_of_bugs_reported_monthly($base){      
+		$monthly = "SELECT count(*) as count FROM `bug_report` WHERE MONTH(ts_created) = 10";
+		return $base->query($monthly)->fetch_array();
+}
+
+public function count_no_of_bugs_reports_resolved_weekly($base){      
+		$weekly= "SELECT count(*) as count FROM `bug_report` WHERE WEEKOFYEAR(ts_closed)=WEEKOFYEAR(CURDATE())";
+		return $base->query($weekly)->fetch_array();
+}
+
 }
 	
 
@@ -907,6 +931,16 @@ class generate_report_page{
 		$generate_report_controller = new generate_report_controller();
 		return $generate_report_controller->get_best_developer($base);
 	}
+	
+	public function generate_no_of_bugs_reported_monthly($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_no_of_bugs_reported_monthly($base);		
+	}
+	
+	public function generate_no_of_bugs_reports_resolved_weekly($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_no_of_bugs_reports_resolved_weekly($base);		
+	}
 }
 
 
@@ -916,6 +950,17 @@ class generate_report_controller{
 		$user_developer = new user_developer($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		return $user_developer->find_best_developer($base);		
 	}
+	
+	public function get_no_of_bugs_reported_monthly($base){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->count_no_of_bugs_reported_monthly($base);				
+	}
+	
+	public function get_no_of_bugs_reports_resolved_weekly($base){
+		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $bug_report->count_no_of_bugs_reports_resolved_weekly($base);				
+	}
+	
 }
 
 class bug_comment_page{
@@ -1018,12 +1063,41 @@ class user_list_page{
 
 class user_list_controller{
 	public function find_and_delete_user($base,$user_id){
-	$user = new user($base,$user_id,NULL,NULL,NULL,NULL);
-	$user->delete_user_from_user_list();
-		
+	$user = new user($base,NULL,NULL,NULL,NULL,NULL);
+	$user->delete_user_from_user_list($user_id);		
 	}
 	
 }
+
+
+class edit_profile_page{
+	public function edit_profile($base,$user_id,$email,$password){
+	$edit_profile_controller = new edit_profile_controller();
+	$edit_profile_controller->change_profile_details($base,$user_id,$email,$password);
+	}
+	
+	public function display_fail(){
+		echo "<p class='alert error'><b>Attention !</b> put something ah sial</p>";
+	}
+}
+
+
+class edit_profile_controller{
+	public function change_profile_details($base,$user_id,$email,$password){
+	$user = new user($base,NULL,NULL,NULL,NULL,NULL);
+	$result=$user->set_profile_details($base,$user_id,$email,$password);
+	if($result==1){
+	$home_page=new home_page();
+	$home_page->redirect_home($base,$email);
+         }else{
+            $edit_profile_page=new edit_profile_page();
+			$edit_profile_page->display_fail();
+        }
+	}
+	
+}
+
+
 
 
 	 

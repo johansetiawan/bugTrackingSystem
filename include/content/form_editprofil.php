@@ -1,41 +1,20 @@
 
   <?php
-      if (isset($_SESSION['user'])) {
+      include("classes.php");
+	  if (isset($_SESSION['user'])) {
         ///  
       }else{  
           header('Location:login.php');
       } 
-
+	  $edit_profile_page = new edit_profile_page();
       if (isset($_POST['submit'])) {
-        if (!empty($_POST['email']) && !empty($_POST['password1'])) {
-              
-              
+        
 			  $password = mysqli_real_escape_string($base,$_POST['password1']);  
               $email = mysqli_real_escape_string($base,$_POST['email']); 
               $user_id = $_SESSION['user']['user_id'];
 			  
-			  
-			  
-              //echo $_POST['descproduit'].'<hr>'.$descproduit; 
-
-              $editpro = "UPDATE user SET email='$email',PASSWORD='$password' WHERE user_id='$user_id'";
-              echo "<p class='alert error'><b>Attention !</b> $editpro</p>";
-             //die($editpro);
-              $rq = mysqli_query($base,$editpro);
-
-              $data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$_SESSION['user']['user_id']."'";
-              $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-              $_SESSION['user'] = $datauser;
-
-          		if ($_SESSION['user']['user_type'] == "Reporter") {
-                    header('Location: admin.php');
-                }else{
-                    header('Location: user.php');
-                }
-         }else{
-            echo "<p class='alert error'><b>Attention !</b> put something ah sial</p>";
-        }
-      }
+			  $edit_profile_page->edit_profile($base,$user_id,$email,$password);
+	}
   ?>
 
 <form  method='post' action="" >
