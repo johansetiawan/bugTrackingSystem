@@ -327,6 +327,11 @@ public function set_no_of_bugs_reported($value){
 	$this->$bugs_reported=$value;
 }
 
+public function find_best_reporter($base){
+	$bestdev = "SELECT * FROM user inner join user_reporter on user.user_id=reporter_id order by bugs_reported DESC LIMIT 1";
+	return $dev = $base->query($bestdev)->fetch_array();
+}
+
 }
 
 class user_administrator extends user{
@@ -950,6 +955,11 @@ class generate_report_page{
 		return $generate_report_controller->get_best_developer($base);
 	}
 	
+	public function generate_best_reporter($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_best_reporter($base);
+	}
+	
 	public function generate_no_of_bugs_reported_monthly($base){
 		$generate_report_controller = new generate_report_controller();
 		return $generate_report_controller->get_no_of_bugs_reported_monthly($base);		
@@ -967,6 +977,11 @@ class generate_report_controller{
 	public function get_best_developer($base){
 		$user_developer = new user_developer($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		return $user_developer->find_best_developer($base);		
+	}
+	
+	public function get_best_reporter($base){
+		$user_reporter = new user_reporter($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		return $user_reporter->find_best_reporter($base);		
 	}
 	
 	public function get_no_of_bugs_reported_monthly($base){
