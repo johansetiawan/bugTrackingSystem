@@ -1,7 +1,7 @@
 
   <?php
         include "classes.php";
-		$login_UI = new login_UI($base);
+		$login_page = new login_page($base);
 		if (isset($_SESSION['user'])) {
         header('Location: index.php');
       }
@@ -10,7 +10,7 @@
           
 			$email = $_POST['login'];
 			$password = $_POST['password'];            
-			$login_UI->login($email,$password);
+			$login_page->login($email,$password);
       }
   ?>
     <form action="login.php" method="post" style="max-width: 100%;">

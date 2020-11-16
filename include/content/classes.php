@@ -2,7 +2,7 @@
  <?php
 
  
- class login_UI{
+ class login_page{
 	 private $base = NULL;
 	 
 	 function __construct($base)
@@ -53,13 +53,13 @@ class login_controller{
 			  $user_type =$datauser['user_type'];
 			  $user = new user($this->base,$user_id,$email,$user_password,$full_name,$user_type);
 			  $result = $user->verify_user($email,$password);
-			  $login_UI = new login_UI($this->base);
+			  $login_page = new login_page($this->base);
 			  if($result==1){
 				$home_page=new home_page;
 				$home_page->redirect_home($this->base,$user_email);
 			  }
 			 else if($result==NULL){
-			$login_UI->display_fail();				  				  
+			$login_page->display_fail();				  				  
 			 }
 				  
 	}
@@ -204,7 +204,25 @@ public function delete_user_from_user_list($user_id)
 		
 		
 	}
+	
+	public function insert_user($confirm_password){
+		$reqnumemail = "SELECT count(user_id) FROM user WHERE EMAIL LIKE '".$this->email."'";
+        $result = $this->base->query($reqnumemail);  
+        $numemail = $result->fetch_row(); 
+		 if ($numemail['0'] == 0) {
 
+                   if ($this->password == $confirm_password) {
+						$req = "INSERT INTO `user` (`full_name`, `EMAIL`, `password`,`user_type`) VALUES ('".$this->full_name."','".$this->email."', '".$this->password."','".$this->user_type."')";
+						$rq = mysqli_query($this->base,$req);											
+						return 1;                      
+                  }else{
+					  return 0;                      
+                  }
+
+              }else{
+				  return 0; 
+              }
+	}
 	
 }
 
@@ -449,24 +467,14 @@ class register_controller{
 	
 public function validate_user_info($base,$email, $password,$full_name, $user_type,$repassword){
 	  $register_page=new register_page;
-	  $reqnumemail = "SELECT count(user_id) FROM user WHERE EMAIL LIKE '".$email."'";
-              $result = $base->query($reqnumemail);  
-              $numemail = $result->fetch_row(); 
-  
-              if ($numemail['0'] == 0) {
-
-                   if ($password == $repassword) {
-						$user = new user($base,NULL,$email,$password,$full_name,$user_type);                     
-						$req = "INSERT INTO `user` (`full_name`, `EMAIL`, `password`,`user_type`) VALUES ('$full_name','$email', '$password','$user_type')";
-                        $rq = mysqli_query($base,$req);						
+	  
+			  $user = new user($base,NULL,$email,$password,$full_name,$user_type);
+			  $result=$user->insert_user($repassword);
+			
+	if($result==1){
 						$register_page->display_success();                      
-
                   }else{
 					  $register_page->display_error();                      
-                  }
-
-              }else{
-				  $register_page->display_error(); 
               }
 }
 
