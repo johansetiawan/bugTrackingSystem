@@ -1,9 +1,9 @@
 <?php
 	include("classes.php");
     $id = $dataproduit['bug_id'];
-	$allcomments = "SELECT * FROM `comment` where bug_id = $id" ;
-    $comments = $base->query($allcomments);
+	
     $bug_comment_page = new bug_comment_page();
+	$comments = $bug_comment_page->display_comments($base,$id);
 
 if (isset($_POST['submit'])) {
 		$descproduit = mysqli_real_escape_string($base,nl2br($_POST['comment']));

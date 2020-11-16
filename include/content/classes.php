@@ -960,6 +960,11 @@ class bug_comment_page{
 	$bug_comment_controller->set_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);		
 	}
 	
+	public function display_comments($base,$bug_id){
+		$bug_comment_controller = new bug_comment_controller($base,$bug_id);
+		return $bug_comment_controller->get_comments($base,$bug_id);	
+	}
+	
 	public function refresh_page(){
 		echo "<meta http-equiv='refresh' content='0'>";
 	}
@@ -984,6 +989,10 @@ class bug_comment_controller{
 		}
 	}
 	
+	public function get_comments($base,$bug_id){
+		$comment = new comment($base,NULL,NULL,NULL,NULL,NULL);
+		return $comment->retrieve_all_comments($base,$bug_id);
+	}
 	
 }
 
@@ -1061,6 +1070,11 @@ public function create_comment($base,$comment_id,$user_id,$bug_report_id,$commen
          }else{
             return 0;
         }
+}
+
+public function retrieve_all_comments($base,$bug_id){
+		$allcomments = "SELECT * FROM `comment` where bug_id = $bug_id" ;
+		return $base->query($allcomments);
 }
 
 }
