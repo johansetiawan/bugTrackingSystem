@@ -17,7 +17,7 @@
          $login_controller->verify_login($email,$password);     			
         }else{
             echo "<p class='alert error'><b>Attention !</b> Please do not leave blanks</p>";
-          }
+        }
 	}
 
 	public function display_fail()
@@ -44,22 +44,15 @@ class login_controller{
 	
 	public function verify_login($email,$password)
 	{       
-			  $data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
-			  $datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
-			  $user_id =$datauser['user_id'];
-			  $user_email = $datauser['email'];
-			  $user_password = $datauser['password'];
-			  $full_name = $datauser['full_name'];
-			  $user_type =$datauser['user_type'];
-			  $user = new user($this->base,$user_id,$email,$user_password,$full_name,$user_type);
-			  $result = $user->verify_user($email,$password);
-			  $login_page = new login_page($this->base);
+			  $user = new user($this->base,NULL,NULL,NULL,NULL,NULL);
+			  $result = $user->verify_user($email,$password);			  
 			  if($result==1){
 				$home_page=new home_page;
-				$home_page->redirect_home($this->base,$user_email);
+				$home_page->redirect_home($this->base,$email);
 			  }
-			 else if($result==NULL){
-			$login_page->display_fail();				  				  
+			 else{
+				$login_page = new login_page($this->base);
+				$login_page->display_fail();				  				  
 			 }
 				  
 	}
@@ -166,15 +159,14 @@ public function delete_user_from_user_list($user_id)
 			  $reqnumlogin = "SELECT count(user_id) FROM user WHERE email LIKE '".$user_email."'";
               $result = $this->base->query($reqnumlogin);  
               $numLOGIN = $result->fetch_row(); 			  
-              if ($numLOGIN['0'] == 1) {
-				  
+              if ($numLOGIN['0'] == 1) {				  
                   if ($password == $user_password) {
 					return 1;					
                     }else{
-                        return NULL;
+                        return 0;
                     }
                 }else{
-				 return NULL;
+				 return 0;
                 }
 	}
 
@@ -419,20 +411,12 @@ class home_controller{
 	public function end_session()
 	{
 		 session_destroy();
-		 $login_UI = new login_UI(NULL);
-		 $login_UI->redirect_login();
+		 $login_page = new login_page(NULL);
+		 $login_page->redirect_login();
 	}
 	
-	public function get_user_details($base,$user_id){
-		
-		$data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$user_id."'";
-		$datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-		$user_id =$datauser['user_id'];
-		$user_email = $datauser['email'];
-		$user_password = $datauser['password'];
-		$full_name = $datauser['full_name'];
-		$user_type =$datauser['user_type'];
-		$user = new user($base,$user_id,$user_email,$user_password,$full_name,$user_type);
+	public function get_user_details($base,$user_id){		
+		$user = new user($base,NULL,NULL,NULL,NULL,NULL);
 		return $user->retrieve_user_details($base,$user_id);
 	}
 	
@@ -446,7 +430,7 @@ class register_page{
 
 public function register_user($base,$email,$password,$full_name,$user_type,$repassword){
 	$register_controller = new register_controller();
-	$register_controller->validate_user_info($base,$email, $password,$full_name, $user_type,$repassword);
+	$register_controller->validate_user_info($base,$email, $password,$full_name,$user_type,$repassword);
 	
 }
 
@@ -456,75 +440,31 @@ public function display_success(){
 
 public function display_error(){
 	
-	echo "<p class='alert error'><b>Attention !</b> password is not the same or email already exists</p>";	
+	echo "<p class='alert error'><b>Attention !</b> password field and confirm password field are not the same or email already exists</p>";	
 }
 	
 }
 
 
 class register_controller{
-
 	
 public function validate_user_info($base,$email, $password,$full_name, $user_type,$repassword){
-	  $register_page=new register_page;
+	$register_page=new register_page;
 	  
-			  $user = new user($base,NULL,$email,$password,$full_name,$user_type);
-			  $result=$user->insert_user($repassword);
+	$user = new user($base,NULL,$email,$password,$full_name,$user_type);
+	$result=$user->insert_user($repassword);
 			
 	if($result==1){
-						$register_page->display_success();                      
-                  }else{
-					  $register_page->display_error();                      
-              }
+		$register_page->display_success();                      
+    }else{
+		$register_page->display_error();                      
+    }
+	
 }
 
 	
 }
-/*
-class edit_profile_page{
-	public function edit_profile($base,$password,$email,$user_id){
-		$edit_profile_controller=new edit_profile_controller();
-		$edit_profile_controller->validate_info($base,$password,$email,$user_id);
-	}	
-}
 
-
-class edit_profile_controller{
-	public function validate_info($base,$password,$email,$user_id){
-		$data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$user_id."'";
-		$datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-		$user_id =$datauser['user_id'];
-		$user_email = $datauser['email'];
-		$user_password = $datauser['password'];
-		$full_name = $datauser['full_name'];
-		$user_type =$datauser['user_type'];
-		$user = new user($base,$user_id,$user_email,$user_password,$full_name,$user_type);
-		$user->set_email=$email;
-		$user->set_password=$password;
-		$new_email=$user->get_email();
-		$new_password=$user->get_password();
-		
-		$editpro = "UPDATE user SET email='$new_email',PASSWORD='$new_password' WHERE user_id='$user_id'";
-        echo "<p class='alert error'><b>Attention !</b> $editpro</p>";
-        //die($editpro);
-        $rq = mysqli_query($base,$editpro);
-
-        $data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$_SESSION['user']['user_id']."'";
-        $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-        $_SESSION['user'] = $datauser;
-
-        if ($user_type == "Reporter") {
-            header('Location: admin.php');
-        }else{
-            header('Location: user.php');
-        }
-		
-				
-	}
-		
-}
-
-*/
 class bug_report{
 	
 private $base = NULL;
@@ -757,6 +697,50 @@ public function count_no_of_bugs_reports_resolved_weekly($base){
 		return $base->query($weekly)->fetch_array();
 }
 
+public function create_new_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority){
+	 if (!empty($title) && !empty($description)&& !empty($keyword)&& !empty($version_no)&& !empty($priority)) {			  
+			  $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`keyword`,`version_no`,`priority`) VALUES ('$reporter_id','$title','$description','$keyword','$version_no','$priority')";
+			  $rq = mysqli_query($base,$addpro);
+			  return 1;			  
+        }else{
+			return 0;           
+        }		
+}
+
+public function modify_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts){
+	if($status=='closed')
+	$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_closed='".$ts."' WHERE bug_id=".$bug_report_id."";
+	else if($status=='invalid'||$status=='duplicate')
+	$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_modified='".$ts."',ts_closed='".$ts."' WHERE bug_id=".$bug_report_id."";
+	else
+	$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_modified='".$ts."' WHERE bug_id=".$bug_report_id."";
+    if($status == "closed")
+    {
+        $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$triager_id."";
+        $upd = mysqli_query($base,$addpoint);
+    }
+	$rq = mysqli_query($base,$editpro);
+}
+
+public function modify_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified){
+	$editpro = "UPDATE bug_report SET status='fixed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
+    $addpoint = "UPDATE user_developer set bugs_fixed = bugs_fixed+1 WHERE developer_id =".$developer_id."";
+    $upd = mysqli_query($base,$addpoint);
+	$rq = mysqli_query($base,$editpro);	
+}
+
+public function modify_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified){
+	$editpro = "UPDATE bug_report SET status='reviewed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
+    $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$reviewer_id."";
+    $upd = mysqli_query($base,$addpoint);
+	$rq = mysqli_query($base,$editpro);
+}
+
+public function modify_bug_report_assignee($base,$developer_id,$bug_report_id){
+	$editpro = "UPDATE bug_report SET developer_id='".$developer_id."' WHERE bug_id=".$bug_report_id."";
+	$rq = mysqli_query($base,$editpro);
+}
+
 }
 	
 
@@ -847,20 +831,29 @@ class report_bug_page{
 		$report_bug_controller = new report_bug_controller();
 		$report_bug_controller->validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority);		
 	}
+	
+	public function display_success(){
+		die("<p class='alert success'>Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
+	}
+	
+	public function display_error(){
+		 echo "<p class='alert error'><b>Attention !</b> error</p>";
+	}
 
 }
 
 class report_bug_controller{
 	
 	public function validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority){
-		 if (!empty($title) && !empty($description)&& !empty($keyword)&& !empty($version_no)&& !empty($priority)) {
-			  $bug_report=new bug_report($base, NULL, $reporter_id, NULL, NULL, NULL, $title, $description, $keyword, $version_no, NULL, $priority, NULL, NULL, NULL);
-			  $addpro = "INSERT INTO `bug_report` (`reporter_id`, `title`,`description`,`keyword`,`version_no`,`priority`) VALUES ('$reporter_id','$title','$description','$keyword','$version_no','$priority')";
-			  $rq = mysqli_query($base,$addpro);
-			  die("<p class='alert success'>.$addpro Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
-        }else{
-            echo "<p class='alert error'><b>Attention !</b> error</p>";
-        }	
+		$bug_report=new bug_report($base, NULL, $reporter_id, NULL, NULL, NULL, $title, $description, $keyword, $version_no, NULL, $priority, NULL, NULL, NULL);
+		$result = $bug_report->create_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority);
+		$report_bug_page = new report_bug_page();
+		if($result==1){
+			$report_bug_page->display_success();
+		}
+		else{
+			$report_bug_page->display_error();
+		}
 	}
 	
 }	
@@ -905,52 +898,28 @@ class bug_report_detail_controller{
 		
 	public function set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-		$bug_report->set_status($status);	
-		$bug_report->set_triager_id($triager_id);
-		if($status=='closed')
-		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_closed='".$ts."' WHERE bug_id=".$bug_report_id."";
-		else if($status=='invalid'||$status=='duplicate')
-		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_modified='".$ts."',ts_closed='".$ts."' WHERE bug_id=".$bug_report_id."";
-		else
-		$editpro = "UPDATE bug_report SET status='".$status."',triager_id ='".$triager_id."',ts_modified='".$ts."' WHERE bug_id=".$bug_report_id."";
-        if($status == "closed")
-        {
-            $addpoint = "UPDATE user_triager set bugs_closed = bugs_closed+1 WHERE triager_id =".$triager_id."";
-            $upd = mysqli_query($base,$addpoint);
-        }
-		$rq = mysqli_query($base,$editpro);
+		$bug_report->modify_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts);		
 		$bug_report_list_page=new bug_report_list_page();
 		$bug_report_list_page->redirect_bug_report_list();
 	}
 	
 	public function set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-		$bug_report->set_status($status);	
-		$editpro = "UPDATE bug_report SET status='fixed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
-        $addpoint = "UPDATE user_developer set bugs_fixed = bugs_fixed+1 WHERE developer_id =".$developer_id."";
-        $upd = mysqli_query($base,$addpoint);
-		$rq = mysqli_query($base,$editpro);		
+		$bug_report->modify_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified);			
 		$bug_report_list_page=new bug_report_list_page();
 		$bug_report_list_page->redirect_bug_report_list();
 	}
 		
 	public function set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-		$bug_report->set_status($status);	
-		$bug_report->set_reviewer_id($reviewer_id);
-		$editpro = "UPDATE bug_report SET status='reviewed',ts_modified='".$ts_modified."' WHERE bug_id=".$bug_report_id."";
-        $addpoint = "UPDATE user_reviewer set bugs_resolved = bugs_resolved+1 WHERE reviewer_id =".$reviewer_id."";
-        $upd = mysqli_query($base,$addpoint);
-		$rq = mysqli_query($base,$editpro);
+		$bug_report->modify_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified);
 		$bug_report_list_page=new bug_report_list_page();
 		$bug_report_list_page->redirect_bug_report_list();
 	}
 	
 	public function set_bug_report_assignee($base,$developer_id,$bug_report_id){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-		$bug_report->set_developer_id($developer_id);
-		$editpro = "UPDATE bug_report SET developer_id='".$developer_id."' WHERE bug_id=".$bug_report_id."";
-		$rq = mysqli_query($base,$editpro);	
+		$bug_report->modify_bug_report_assignee($base,$developer_id,$bug_report_id);	
 		$bug_report_list_page=new bug_report_list_page();
 		$bug_report_list_page->redirect_bug_report_list();
 	}
@@ -1010,6 +979,13 @@ class bug_comment_page{
 	$bug_comment_controller->set_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);		
 	}
 	
+	public function refresh_page(){
+		echo "<meta http-equiv='refresh' content='0'>";
+	}
+	
+	public function display_error(){
+		echo "<p class='alert error'><b>Attention !</b> error</p>";
+	}
 	
 }
 
@@ -1017,8 +993,14 @@ class bug_comment_page{
 class bug_comment_controller{
 	public function set_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created){
 		$user_comment = new comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);
-		$addpro = "INSERT INTO comment(comment, bug_id,user_id) VALUES ('$comment', '$bug_report_id','$user_id' )";
-        $rq = mysqli_query($base,$addpro);
+		$result=$user_comment->create_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);
+		$bug_comment_page=new bug_comment_page();
+		if($result==1){
+			$bug_comment_page->refresh_page();
+		}
+		else{
+			$bug_comment_page->display_error();
+		}
 	}
 	
 	
@@ -1090,6 +1072,15 @@ public function set_ts_created($value){
 	$this->ts_created=$value;
 }
 
+public function create_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created){
+		if (!empty($_POST['comment'])) {
+			  $addpro = "INSERT INTO comment(comment, bug_id,user_id) VALUES ('$comment', '$bug_report_id','$user_id' )";
+			  $rq = mysqli_query($base,$addpro);
+			  return 1;
+         }else{
+            return 0;
+        }
+}
 
 }
 
