@@ -1,5 +1,6 @@
 ﻿			<?php 
-                     include('config.php');  
+                     include('config.php');
+include('include/content/bug_report_detail_controller1.php');
                     if (isset($_GET['num'])) {
                         $idproduit = $_GET['num'];
                         $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
@@ -14,11 +15,30 @@
             ?> 
 			<?php 
 					$title="Roger Bug Tracker - ".$dataproduit['title'];
-					include('include/head.php'); 
+					include('include/head.php');
+
+    $id = $dataproduit['bug_id'];
+	
+    $bug_comment_page = new bug_comment_page();
+	$comments = $bug_comment_page->display_comments($base,$id);
+
+if (isset($_POST['submit'])) {
+		$descproduit = mysqli_real_escape_string($base,nl2br($_POST['comment']));
+		$uid = mysqli_real_escape_string($base,nl2br($_POST['uid']));	
+        $ts_created = date("Y-m-d H:i:s");
+		$bug_comment_page->comment($base,NULL,$uid,$id,$descproduit,$ts_created);
+		/*if (!empty($_POST['comment'])) {
+              $descproduit = mysqli_real_escape_string($base,nl2br($_POST['comment']));
+			  $uid = mysqli_real_escape_string($base,nl2br($_POST['uid']));							
+			  echo "<meta http-equiv='refresh' content='0'>";
+         }else{
+            echo "<p class='alert error'><b>Attention !</b> error</p>";
+        }*/
+      }
 					 
 			?>
     		<!--<div class="divleft"></div>-->
-    		<div class="content"> <?php include('include/content/bug_report_detail_controller1.php'); ?>
+    		<div class="content"> <?php  ?>
 <article> 
 	<?php  if (isset($_SESSION['user'])) {
 					if ($_SESSION['user']['user_type'] == "Triager") { ?> 

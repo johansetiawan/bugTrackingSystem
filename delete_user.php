@@ -1,4 +1,4 @@
-﻿			<?php 	 include('include/content/classes.php');
+﻿			<?php 	 include('include/content/user_list_controller.php');
                      include('config.php');  
                       if (isset($_SESSION['user'])) {
                         if ($_SESSION['user']['user_type'] == "admin") { 

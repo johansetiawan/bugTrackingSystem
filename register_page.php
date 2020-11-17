@@ -1,10 +1,32 @@
 ﻿      <?php 
           $title="Roger Bug Tracker - Sign Up";
           include('include/head.php'); 
+include('include/content/register_controller.php');
+
+
+  if (isset($_SESSION['user'])) {
+        header('Location: index.php');
+      }
+  if (isset($_POST['submit'])) { 
+        $fullname =mysqli_real_escape_string($base,$_POST["firstname"]);
+        $email =mysqli_real_escape_string($base,$_POST["email"]);
+        $password =mysqli_real_escape_string($base,$_POST['password1']);
+        $repassword =mysqli_real_escape_string($base,$_POST['password2']);
+        $usertype =mysqli_real_escape_string($base,$_POST['usertype']);
+
+
+        if (!empty($fullname) && !empty($email) && !empty($email) && !empty($password) && !empty($repassword)) {
+		$register_page = new register_page();
+		$register_page->register_user($base,$email,$password,$fullname,$usertype,$repassword);	
+        }else{
+          echo "<p class='alert error'><b>Attention !</b> fill up all required field</p>";
+        }
+      }
+
       ?> 
 
         <!--<div class="divleft"></div>-->
-        <div class="content"> <?php include('include/content/register_controller.php'); ?> 
+        <div class="content">
 <form  method='post' action="" style="padding-left: 30%;padding-right: 30%;">
 <table> 
   <tr>

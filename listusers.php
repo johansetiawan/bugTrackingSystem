@@ -1,11 +1,24 @@
 ﻿			<?php 
 					$title="user list";
-					include('include/head.php'); 
+					include('include/head.php');
+                    include('include/content/user_list_controller.php'); 
+if (isset($_SESSION['user'])) {
+        if ($_SESSION['user']['user_type'] == "admin") {
+          
+		    $allusers = "SELECT * FROM `user`";
+		    $users = $base->query($allusers); 
+
+        }else{
+          header('Location:index.php');
+        }   
+      }else{  
+          header('Location:login_page.php');
+      }
 					 
 			?>
 
     		<div class="divleft"></div>
-    		<div class="content"> <?php include('include/content/allusers.php'); ?> 
+    		<div class="content">
 <h1>Admin Page</h1>
 		<div class="table_list"> 
 			<table>

@@ -1,10 +1,16 @@
 ﻿      <?php 
           $title="Roger Bug Tracker - My Page";
           include('include/head.php'); 
+
+include('include/content/home_page.php');
+
+$user_id = $_SESSION['user']['user_id'];
+$home_page = new home_page();
+$datauser=$home_page->display_user_details($base,$user_id);
       ?>
 
         <!--<div class="divleft"></div>-->
-        <div class="content"> <?php include('include/content/home_page.php'); ?> 
+        <div class="content">
 <article>   
 		<div class="paneloption" style="display:block;width: 120px;">
 			<a href="edit_profile_page.php" class="delete"><i class="ion ion-wrench"></i></a> 

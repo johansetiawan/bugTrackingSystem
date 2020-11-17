@@ -1,8 +1,21 @@
 <?php
-include"classes.php";
-$user_id = $_SESSION['user']['user_id'];
-$home_page = new home_page();
-$datauser=$home_page->display_user_details($base,$user_id);
 
+include('classes.php');
 
+class home_controller{
+		
+	public function end_session()
+	{
+		 session_destroy();
+		 $login_page = new login_page(NULL);
+		 $login_page->redirect_login();
+	}
+	
+	public function get_user_details($base,$user_id){		
+		$user = new user($base,NULL,NULL,NULL,NULL,NULL);
+		return $user->retrieve_user_details($base,$user_id);
+	}
+	
+	
+}
 ?>

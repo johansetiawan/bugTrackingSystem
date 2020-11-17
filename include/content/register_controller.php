@@ -1,22 +1,25 @@
 <?php
   include "classes.php";
-  if (isset($_SESSION['user'])) {
-        header('Location: index.php');
-      }
-  if (isset($_POST['submit'])) { 
-        $fullname =mysqli_real_escape_string($base,$_POST["firstname"]);
-        $email =mysqli_real_escape_string($base,$_POST["email"]);
-        $password =mysqli_real_escape_string($base,$_POST['password1']);
-        $repassword =mysqli_real_escape_string($base,$_POST['password2']);
-        $usertype =mysqli_real_escape_string($base,$_POST['usertype']);
 
 
-        if (!empty($fullname) && !empty($email) && !empty($email) && !empty($password) && !empty($repassword)) {
-		$register_page = new register_page();
-		$register_page->register_user($base,$email,$password,$fullname,$usertype,$repassword);	
-        }else{
-          echo "<p class='alert error'><b>Attention !</b> fill up all required field</p>";
-        }
-      }
 
+
+class register_controller{
+	
+public function validate_user_info($base,$email, $password,$full_name, $user_type,$repassword){
+	$register_page=new register_page;
+	  
+	$user = new user($base,NULL,$email,$password,$full_name,$user_type);
+	$result=$user->insert_user($repassword);
+			
+	if($result==1){
+		$register_page->display_success();                      
+    }else{
+		$register_page->display_error();                      
+    }
+	
+}
+
+	
+}
 ?>

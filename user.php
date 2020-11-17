@@ -1,10 +1,28 @@
 ﻿      <?php 
           $title="home";
           include('include/head.php'); 
+            include('include/content/home_page.php');
+
+if (isset($_SESSION['user'])) { 
+
+	 	if ($_SESSION['user']['user_type']== "Reporter") {
+
+	 		header('Location: home_page.php');
+	 	}
+	 	
+      }else{
+        header('Location: login_page.php');
+      }
+	  
+	  $user_id = $_SESSION['user']['user_id'];
+	  $home_page = new home_page();
+	  $datauser=$home_page->display_user_details($base,$user_id);
+      
+	//var_dump($_SESSION) 
       ?>
 
         <!--<div class="divleft"></div>-->
-        <div class="content"> <?php include('include/content/user.php'); ?> 
+        <div class="content">  
 	<article>   
 		<div class="paneloption" style="display:block;">
 			<a href="edit_profile_page.php" class="delete"><i class="ion ion-wrench"></i></a> 

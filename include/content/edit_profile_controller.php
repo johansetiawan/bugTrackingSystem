@@ -1,19 +1,23 @@
 
   <?php
       include("classes.php");
-	  if (isset($_SESSION['user'])) {
-        ///  
-      }else{  
-          header('Location:login_page.php');
-      } 
-	  $edit_profile_page = new edit_profile_page();
-      if (isset($_POST['submit'])) {
-        
-			  $password = mysqli_real_escape_string($base,$_POST['password1']);  
-              $email = mysqli_real_escape_string($base,$_POST['email']); 
-              $user_id = $_SESSION['user']['user_id'];
-			  
-			  $edit_profile_page->edit_profile($base,$user_id,$email,$password);
+
+
+
+
+class edit_profile_controller{
+	public function change_profile_details($base,$user_id,$email,$password){
+	$user = new user($base,NULL,NULL,NULL,NULL,NULL);
+	$result=$user->set_profile_details($base,$user_id,$email,$password);
+	if($result==1){
+	$home_page=new home_page();
+	$home_page->redirect_home($base,$email);
+         }else{
+            $edit_profile_page=new edit_profile_page();
+			$edit_profile_page->display_fail();
+        }
 	}
+	
+}
   ?>
 
