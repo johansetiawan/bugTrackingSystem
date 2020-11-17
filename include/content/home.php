@@ -5,7 +5,7 @@
         if($_SESSION['user']['user_type'] == "Triager")
         {
             
-		  echo "<br/>Please click <b><a href='report.php'>here</a></b> to generate reports.";
+		  echo "<br/>Please click <b><a href='generate_report_page.php'>here</a></b> to generate reports.";
         }
         if($_SESSION['user']['user_type'] == "admin")
         {

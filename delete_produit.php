@@ -10,7 +10,7 @@ if (isset($_GET['num'])) {
 	$bug_report_list_page = new bug_report_list_page();
 	$bug_report_list_page->delete_bug_report($base,$bug_report_id);	
 }else{
-    header('Location: list_produit.php');
+    header('Location: bug_report_list_page.php');
 } 
 
 ?> 

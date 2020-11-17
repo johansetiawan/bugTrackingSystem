@@ -27,7 +27,7 @@
 	 
 	public function redirect_login()
 	{
-		header("location:login.php?logout=true");
+		header("location:login_page.php?logout=true");
 	}
  }
  
@@ -396,7 +396,7 @@ class home_page{
         $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
         $_SESSION['user'] = $datauser;
         if ($_SESSION['user']['user_type'] == "Reporter") {
-              header('Location: admin.php');
+              header('Location: home_page.php');
         }else{
               header('Location: user.php');
         }		
@@ -435,7 +435,7 @@ public function register_user($base,$email,$password,$full_name,$user_type,$repa
 }
 
 public function display_success(){	
-	die("<p class='alert success'>Account created</p><br><center><a href='login.php'>Login</a> - <a href='index.php'>Home</a></center>");	
+	die("<p class='alert success'>Account created</p><br><center><a href='login_page.php'>Login</a> - <a href='index.php'>Home</a></center>");	
 }
 
 public function display_error(){
@@ -763,7 +763,7 @@ class bug_report_list_page{
 	}
 			
 	public function redirect_bug_report_list(){
-		header('Location: list_produit.php');	
+		header('Location: bug_report_list_page.php');	
 	}
 	
 }
@@ -814,7 +814,7 @@ class report_bug_page{
 	}
 	
 	public function display_success(){
-		die("<p class='alert success'>Success ! bug have been added !</p><br><center><a href='addproduit.php'>add another bug</a> - <a href='list_produit.php'>bug list</a></center>"); 
+		die("<p class='alert success'>Success ! bug have been added !</p><br><center><a href='add_bug_page.php'>add another bug</a> - <a href='bug_report_list_page.php'>bug list</a></center>"); 
 	}
 	
 	public function display_error(){

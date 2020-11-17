@@ -1,10 +1,10 @@
 ﻿      <?php 
-          $title="Roger Bug Tracker - Sign Up";
+          $title="edit profile";
           include('include/head.php'); 
-      ?> 
+      ?>
 
-        <!--<div class="divleft"></div>-->
-        <div class="content"> <?php include('include/content/form_inscription.php'); ?> </div>
+        <!--div class="divleft"></div-->
+        <div class="content"> <?php include('include/content/edit_profile_controller.php'); ?> </div>
         <div class="divright">
           <?php include('include/divright/user.php');  ?>
         </div> 

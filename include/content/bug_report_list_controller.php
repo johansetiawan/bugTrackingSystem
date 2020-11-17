@@ -44,7 +44,7 @@ if(isset($_POST['show']))
 
 ?>
 <div>
-    <form method="post" action="list_produit.php" style="max-width: 50%;">
+    <form method="post" action="bug_report_list_page.php" style="max-width: 50%;">
         <table>
             <tr>
                 <td>
@@ -69,7 +69,7 @@ if(isset($_POST['show']))
 </div>
 <?php if ($_SESSION['user']['user_type'] == "Developer")
 {?>
-<form method="post" action="list_produit.php">
+<form method="post" action="bug_report_list_page.php">
 <input type="submit" name="show" value="show assigned" />
 </form>
 <?php
@@ -80,10 +80,10 @@ if(isset($_POST['show']))
     <?php  if (isset($_SESSION['user'])) {
     if ($_SESSION['user']['user_type'] == "Triager" || $_SESSION['user']['user_type'] == "Developer" || $_SESSION['user']['user_type'] == "Reviewer") { ?> 
     <div class="paneloption">
-        <a href="editproduit.php?num=<?php echo $produit['bug_id'];?>" class="edit"><i class="ion ion-edit"></i></a>
+        <a href="bug_report_detail_page.php?num=<?php echo $produit['bug_id'];?>" class="edit"><i class="ion ion-edit"></i></a>
     </div>
     <?php } } ?>
-    <a href="produit.php?num=<?php echo $produit['bug_id'];?>"><h3><?php echo $produit['title']; ?></h3></a>
+    <a href="bug_report_detail_page1.php?num=<?php echo $produit['bug_id'];?>"><h3><?php echo $produit['title']; ?></h3></a>
     <p>
         <b class="plistop">DateTime: </b> <?php echo $produit['ts_created']; ?>DT<br>
         <b class="plistop">Description: </b> <?php echo $produit['description']; ?> <br>

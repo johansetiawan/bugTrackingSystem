@@ -16,14 +16,14 @@
           header('Location:index.php');
         }   
       }else{  
-          header('Location:login.php');
+          header('Location:login_page.php');
       } 
 	 if (isset($_POST['developer_submit'])){
 			$bug_report_id=$dataproduit['bug_id'];
 			$developer_id = mysqli_real_escape_string($base,nl2br($_POST['devid']));
 			$bug_report_detail_page=new bug_report_detail_page();
 			$bug_report_detail_page->assign_developer($base,$developer_id,$bug_report_id);  	
-			header('Location:list_produit.php');
+			header('Location:bug_report_list_page.php');
 		}
 			
       if (isset($_POST['submit'])) {           

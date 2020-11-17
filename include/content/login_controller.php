@@ -13,7 +13,7 @@
 			$login_page->login($email,$password);
       }
   ?>
-    <form action="login.php" method="post" style="max-width: 100%;">
+    <form action="login_page.php" method="post" style="max-width: 100%;">
         <table>
         <tr>
           <td><input type="text" name="login" placeholder="Username / Email"></input></td>

@@ -1,11 +1,11 @@
 ﻿      <?php 
-          $title="Roger Bug Tracker - Login";
+          $title="Roger Bug Tracker - My Page";
           include('include/head.php'); 
       ?>
 
         <!--<div class="divleft"></div>-->
-        <div class="content"> <?php include('include/content/form_connection.php'); ?> </div>
-        <div class="divright"> 
+        <div class="content"> <?php include('include/content/home_page.php'); ?> </div>
+        <div class="divright">
           <?php include('include/divright/user.php');  ?>
         </div> 
         <?php include('include/footer.php'); ?>

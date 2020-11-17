@@ -4,7 +4,7 @@
 	  if (isset($_SESSION['user'])) {
         ///  
       }else{  
-          header('Location:login.php');
+          header('Location:login_page.php');
       } 
 	  $edit_profile_page = new edit_profile_page();
       if (isset($_POST['submit'])) {

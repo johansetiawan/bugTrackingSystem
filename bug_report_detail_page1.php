@@ -5,10 +5,10 @@
                         $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
                         $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
                         if (empty($dataproduit)) {
-                           header('Location: list_produit.php');
+                           header('Location: bug_report_list_page.php');
                          } 
                     }else{
-                        header('Location: list_produit.php');
+                        header('Location: bug_report_list_page.php');
                     }
 
             ?> 
@@ -18,7 +18,7 @@
 					 
 			?>
     		<!--<div class="divleft"></div>-->
-    		<div class="content"> <?php include('include/content/viewproduit.php'); ?> </div>
+    		<div class="content"> <?php include('include/content/bug_report_detail_controller1.php'); ?> </div>
     		<div class="divright">
     			<?php include('include/divright/user.php');  ?>
     		</div> 

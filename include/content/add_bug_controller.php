@@ -7,7 +7,7 @@
           header('Location:index.php');
         }   
       }else{  
-          header('Location:login.php');
+          header('Location:login_page.php');
       } 
 
       if (isset($_POST['submit'])) {
@@ -25,7 +25,7 @@
 				$bug_report->create_bug_report($base);*/
       }
   ?>
-    <form action="addproduit.php" method="post">
+    <form action="add_bug_page.php" method="post">
         <table>
         <tr>
           <td colspan="2">Title : </td>

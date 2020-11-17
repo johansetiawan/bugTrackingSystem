@@ -15,8 +15,8 @@
 
 <div class="menulist">
 	<a href="index.php"> <i class="ion ion-home"></i> Home</a>
-	<a href="addproduit.php"> <i class="ion ion-wand"></i> Report a Bug</a>
-	<a href="list_produit.php"> <i class="ion ion-android-cart"></i> Bug Report List</a>
-	<a href="edit_infos.php"> <i class="ion ion-edit"></i> Edit Profile</a>
+	<a href="add_bug_page.php"> <i class="ion ion-wand"></i> Report a Bug</a>
+	<a href="bug_report_list_page.php"> <i class="ion ion-android-cart"></i> Bug Report List</a>
+	<a href="edit_profile_page.php"> <i class="ion ion-edit"></i> Edit Profile</a>
 	<a href="index.php?logout=true"><i class="ion ion-power"></i> Logout</a>
 </div>

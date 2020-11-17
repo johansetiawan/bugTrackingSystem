@@ -1,10 +1,10 @@
-﻿      <?php 
-          $title="edit profile";
+      <?php 
+          $title="report";
           include('include/head.php'); 
       ?>
 
-        <!--div class="divleft"></div-->
-        <div class="content"> <?php include('include/content/form_editprofil.php'); ?> </div>
+        <!--<div class="divleft"></div>-->
+        <div class="content"> <?php include('include/content/generate_report_controller.php'); ?> </div>
         <div class="divright">
           <?php include('include/divright/user.php');  ?>
         </div> 

@@ -3,11 +3,11 @@
 
 	 	if ($_SESSION['user']['user_type']== "Reporter") {
 
-	 		header('Location: admin.php');
+	 		header('Location: home_page.php');
 	 	}
 	 	
       }else{
-        header('Location: login.php');
+        header('Location: login_page.php');
       }
 	  
 	  include"classes.php";
@@ -20,7 +20,7 @@
 	
 	<article>   
 		<div class="paneloption" style="display:block;">
-			<a href="edit_infos.php" class="delete"><i class="ion ion-wrench"></i></a> 
+			<a href="edit_profile_page.php" class="delete"><i class="ion ion-wrench"></i></a> 
 		</div>
 		<div class="cont">
 			<h2><?php echo $datauser['full_name']." "?> <span class="tag"><i class="ion ion-chevron-left"></i> <?php echo $datauser['email']; ?> <i class="ion ion-chevron-right"></i></span></h2> <br>

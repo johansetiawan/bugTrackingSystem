@@ -24,7 +24,7 @@ if (isset($_POST['submit'])) {
 					if ($_SESSION['user']['user_type'] == "Triager") { ?> 
 			<div class="paneloption">
 				<a href="delete_produit.php?num=<?php echo $dataproduit['id'];?>" class="delete"><i class="ion ion-trash-a"></i></a>
-				<a href="editproduit.php?num=<?php echo $dataproduit['id'];?>" class="edit"><i class="ion ion-edit"></i></a>
+				<a href="bug_report_detail_controller1.php?num=<?php echo $dataproduit['id'];?>" class="edit"><i class="ion ion-edit"></i></a>
 			</div>
 			<?php } } ?>
     
