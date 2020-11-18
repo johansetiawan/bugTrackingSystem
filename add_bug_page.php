@@ -13,7 +13,7 @@
           header('Location:login_page.php');
       } 
 
-	  $report_bug_page = new report_bug_page();
+	  $add_bug_page = new add_bug_page();
       if (isset($_POST['submit'])) {
 				$reporterid = $_SESSION['user']['user_id'];
                 $nomproduit = mysqli_real_escape_string($base,$_POST['nomproduit']);
@@ -22,7 +22,7 @@
                 $versiono = mysqli_real_escape_string($base,nl2br($_POST['versiono']));
                 $priority = mysqli_real_escape_string($base,nl2br($_POST['priority']));
 				
-				$report_bug_page->report_a_bug($base,$reporterid,$nomproduit,$descproduit,$feature,$versiono,$priority);
+				$add_bug_page->report_a_bug($base,$reporterid,$nomproduit,$descproduit,$feature,$versiono,$priority);
 				
 				
 				/*$bug_report = new bug_report();
@@ -46,9 +46,9 @@
         <tr>
           <td colspan="2">Keyword : </td>
           <td><select id="keyword" name="keyword">
-            <option value="title">C++</option>
-            <option value="developer">Java</option>
-            <option value="status">Python</option>
+            <option value="C++">C++</option>
+            <option value="Java">Java</option>
+            <option value="Python">Python</option>
             </select></td>
         </tr>
         <tr>

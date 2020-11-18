@@ -116,11 +116,11 @@ class bug_report_list_page{
 	
 }
 
-class report_bug_page{
+class add_bug_page{
 	
 	public function report_a_bug($base, $reporter_id, $title, $description, $keyword, $version_no, $priority){
-		$report_bug_controller = new report_bug_controller();
-		$report_bug_controller->validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority);		
+		$add_bug_controller = new add_bug_controller();
+		$add_bug_controller->validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority);		
 	}
 	
 	public function display_success(){
