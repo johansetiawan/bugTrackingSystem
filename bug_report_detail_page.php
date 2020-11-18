@@ -33,7 +33,6 @@
 	 if (isset($_POST['developer_submit'])){
 			$bug_report_id=$dataproduit['bug_id'];
 			$developer_id = mysqli_real_escape_string($base,nl2br($_POST['devid']));
-			$bug_report_detail_page=new bug_report_detail_page();
 			$bug_report_detail_page->assign_developer($base,$developer_id,$bug_report_id);  	
 			header('Location:bug_report_list_page.php');
 		}
@@ -48,7 +47,6 @@
 		 if ($_SESSION['user']['user_type'] == "Triager"){
 			  $triager_id = $_SESSION['user']['user_id'];
 			  $ts = date('Y-m-d H:i:s');
-			  $bug_report_detail_page=new bug_report_detail_page();
 			  $bug_report_detail_page->change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts);           	  
           }
 		  
@@ -56,15 +54,13 @@
           {			  
 			  $developer_id = $_SESSION['user']['user_id'];
 			  $ts_modified = date('Y-m-d H:i:s');
-			  $bug_report_detail_page=new bug_report_detail_page();
 			  $bug_report_detail_page->change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified);			  
               
           }
           else if($_SESSION['user']['user_type'] == "Reviewer")
           {			
 			 $reviewer_id = $_SESSION['user']['user_id'];
-			 $ts_modified = date('Y-m-d H:i:s');
-			  $bug_report_detail_page=new bug_report_detail_page();			  
+			 $ts_modified = date('Y-m-d H:i:s');		  
 			  $bug_report_detail_page->change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified);     
           }
           else

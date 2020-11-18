@@ -2,7 +2,7 @@
           $title="Roger Bug Tracker - My Page";
           include('include/head.php'); 
 
-include('include/content/home_page.php');
+include('include/content/home_controller.php');
 
 $user_id = $_SESSION['user']['user_id'];
 $home_page = new home_page();

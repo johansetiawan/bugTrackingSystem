@@ -7,6 +7,7 @@ include('include/content/register_controller.php');
   if (isset($_SESSION['user'])) {
         header('Location: index.php');
       }
+	  $register_page = new register_page();
   if (isset($_POST['submit'])) { 
         $fullname =mysqli_real_escape_string($base,$_POST["firstname"]);
         $email =mysqli_real_escape_string($base,$_POST["email"]);
@@ -15,8 +16,7 @@ include('include/content/register_controller.php');
         $usertype =mysqli_real_escape_string($base,$_POST['usertype']);
 
 
-        if (!empty($fullname) && !empty($email) && !empty($email) && !empty($password) && !empty($repassword)) {
-		$register_page = new register_page();
+        if (!empty($fullname) && !empty($email) && !empty($email) && !empty($password) && !empty($repassword)) {		
 		$register_page->register_user($base,$email,$password,$fullname,$usertype,$repassword);	
         }else{
           echo "<p class='alert error'><b>Attention !</b> fill up all required field</p>";

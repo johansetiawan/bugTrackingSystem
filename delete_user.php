@@ -8,7 +8,7 @@
                                     $data = "SELECT * FROM `user` WHERE `user_id` LIKE '".$iduser."'";
                                     $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
                                     if ((!empty($datauser))&&($datauser['user_type'] != "admin")) {
-										$user_list_page = new user_list_page();
+										$user_list_page = new user_list_page();	
 										$user_list_page->delete_user($base,$iduser);                                        
                                         } 
                                        header('Location: listusers.php'); 

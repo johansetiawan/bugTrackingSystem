@@ -13,6 +13,7 @@
           header('Location:login_page.php');
       } 
 
+	  $report_bug_page = new report_bug_page();
       if (isset($_POST['submit'])) {
 				$reporterid = $_SESSION['user']['user_id'];
                 $nomproduit = mysqli_real_escape_string($base,$_POST['nomproduit']);
@@ -20,7 +21,7 @@
                 $feature = mysqli_real_escape_string($base,nl2br($_POST['keyword']));
                 $versiono = mysqli_real_escape_string($base,nl2br($_POST['versiono']));
                 $priority = mysqli_real_escape_string($base,nl2br($_POST['priority']));
-				$report_bug_page = new report_bug_page();
+				
 				$report_bug_page->report_a_bug($base,$reporterid,$nomproduit,$descproduit,$feature,$versiono,$priority);
 				
 				

@@ -4,8 +4,9 @@
 include('include/content/bug_report_list_controller.php');
 $allproduit ="";
 
+$bug_report_list_page=new bug_report_list_page();
+
 if (isset($_SESSION['user'])) {
-    $bug_report_list_page=new bug_report_list_page();
 	$produits=$bug_report_list_page->display_bug_reports($base);
 }
 
@@ -15,21 +16,17 @@ if (isset($_POST['submit'])) {
 	$search = mysqli_real_escape_string($base,$_POST['search']);
 
     if($type=='title'){
-        $bug_report_list_page=new bug_report_list_page();
 		$produits=$bug_report_list_page->search_bug_report_by_title($base,$search);
     }
 	
     if($type=='developer'){
-        $bug_report_list_page=new bug_report_list_page();
 		$produits=$bug_report_list_page->search_bug_report_by_assignee($base,$search);
     }
 	
     if($type=='status'){
-        $bug_report_list_page=new bug_report_list_page();
 		$produits=$bug_report_list_page->search_bug_report_by_status($base,$search);
     }
     if($type=='keyword'){
-        $bug_report_list_page=new bug_report_list_page();
 		$produits=$bug_report_list_page->search_bug_report_by_keyword($base,$search);
     }
     //echo $allproduit;
@@ -38,7 +35,6 @@ if (isset($_POST['submit'])) {
 if(isset($_POST['show']))
 {
     $developer_id=$_SESSION['user']['user_id'];
-	$bug_report_list_page=new bug_report_list_page();
 	$produits=$bug_report_list_page->find_bug_reports_assigned_to_me($base,$developer_id);
 	/*$allproduit = "SELECT * FROM `bug_report` where developer_id = ".$developer_id;
     $produits = $base->query($allproduit);*/
@@ -88,7 +84,7 @@ if(isset($_POST['show']))
         <a href="bug_report_detail_page.php?num=<?php echo $produit['bug_id'];?>" class="edit"><i class="ion ion-edit"></i></a>
     </div>
     <?php } } ?>
-    <a href="bug_report_detail_page1.php?num=<?php echo $produit['bug_id'];?>"><h3><?php echo $produit['title']; ?></h3></a>
+    <a href="bug_comment_page.php?num=<?php echo $produit['bug_id'];?>"><h3><?php echo $produit['title']; ?></h3></a>
     <p>
         <b class="plistop">DateTime: </b> <?php echo $produit['ts_created']; ?>DT<br>
         <b class="plistop">Description: </b> <?php echo $produit['description']; ?> <br>

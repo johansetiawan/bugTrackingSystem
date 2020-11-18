@@ -1,7 +1,7 @@
 ﻿			<?php 
 					$title="user list";
 					include('include/head.php');
-                    include('include/content/user_list_controller.php'); 
+                    include('include/content/user_list_controller.php');				
 if (isset($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == "admin") {
           
