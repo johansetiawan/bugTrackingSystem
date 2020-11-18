@@ -1,6 +1,6 @@
 ﻿			<?php 
                      include('config.php');
-include('include/content/bug_report_detail_controller1.php');
+include('include/content/bug_comment_controller.php');
                     if (isset($_GET['num'])) {
                         $idproduit = $_GET['num'];
                         $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";

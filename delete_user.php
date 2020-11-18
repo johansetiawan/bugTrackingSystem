@@ -11,9 +11,9 @@
 										$user_list_page = new user_list_page();	
 										$user_list_page->delete_user($base,$iduser);                                        
                                         } 
-                                       header('Location: listusers.php'); 
+                                       header('Location: user_list_page.php'); 
                                 }else{
-                                    header('Location: listusers.php');
+                                    header('Location: user_list_page.php');
                                 }
                         }else{
                           header('Location:index.php');

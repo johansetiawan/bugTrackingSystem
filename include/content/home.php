@@ -10,7 +10,7 @@
         if($_SESSION['user']['user_type'] == "admin")
         {
             
-		  echo "<br/>Please click <b><a href='listusers.php'>here</a></b> to view user list.";
+		  echo "<br/>Please click <b><a href='user_list_page.php'>here</a></b> to view user list.";
         }
 	}
 	else

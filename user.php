@@ -1,7 +1,7 @@
 ﻿      <?php 
           $title="home";
           include('include/head.php'); 
-            include('include/content/home_page.php');
+			include('include/content/home_controller.php'); 
 
 if (isset($_SESSION['user'])) { 
 
