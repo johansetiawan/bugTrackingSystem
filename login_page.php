@@ -23,7 +23,7 @@ include('include/content/login_controller.php');
         if ($_SESSION['user']['user_type'] == "Reporter") {
               header('Location: home_page.php');
         }else{
-              header('Location: user.php');
+              header('Location: home_page2.php');
         }
 		}
 		else{
