@@ -1,17 +1,45 @@
-﻿			<?php 
-                     include('config.php');  
-                    include('include/content/bug_report_detail_controller.php'); 
-                    if (isset($_GET['num'])) {
-                        $idproduit = $_GET['num'];
-                        $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
-                        $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-                        if (empty($dataproduit)) {
-                           header('Location: bug_report_list_page.php');
-                         } 
-                    }else{
-                        header('Location: bug_report_list_page.php');
-                    }
-        
+﻿<?php 
+    include('config.php');  
+    include('include/content/bug_report_detail_controller.php'); 
+    if (isset($_GET['num'])) {
+        $idproduit = $_GET['num'];
+        $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
+        $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
+        if (empty($dataproduit)) {
+                header('Location: bug_report_list_page.php');
+        } 
+        }else{
+            header('Location: bug_report_list_page.php');
+        }
+    class bug_report_detail_page{
+	
+	public function display_bug_report_detail($base,$bug_report_id){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		return $bug_report_detail_controller->get_bug_report_details($base,$bug_report_id);		
+	}
+	
+	public function change_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_status_triager($base,$status,$triager_id,$bug_report_id,$ts);	
+	}
+	
+	public function change_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_status_developer($base,$status,$developer_id,$bug_report_id,$ts_modified);
+	}
+	
+	public function change_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_status_reviewer($base,$status,$reviewer_id,$bug_report_id,$ts_modified);		
+	}
+	
+	
+	public function assign_developer($base,$developer_id,$bug_report_id){
+		$bug_report_detail_controller = new bug_report_detail_controller();
+		$bug_report_detail_controller->set_bug_report_assignee($base,$developer_id,$bug_report_id,);	
+	}	
+	
+	}    
                     
 	date_default_timezone_set('Asia/Singapore');
 	$idproduit = $_GET['num'];
@@ -68,7 +96,7 @@
               $editpro = "UPDATE bug_report SET status='".$status."' WHERE bug_id=".$bug_report_id."";
 			  $rq = mysqli_query($base,$editpro);	
           }
-              
+           header('Location:bug_report_list_page.php');   
              // $rq = mysqli_query($base,$editpro);
             //echo "<p class='alert error'><b>$editpro</b> error</p>";
         

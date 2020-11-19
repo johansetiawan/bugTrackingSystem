@@ -1,9 +1,23 @@
-﻿			<?php 
-					$title="Roger Bug Tracker - Report a Bug";
-					include('include/head.php');
-                    include('include/content/add_bug_controller.php'); 
+﻿<?php 
+	$title="Roger Bug Tracker - Report a Bug";
+	include('include/head.php');
+    include('include/content/add_bug_controller.php'); 
                     
-      if (isset($_SESSION['user'])) {
+    class add_bug_page{
+	
+	public function report_a_bug($base, $reporter_id, $title, $description, $keyword, $version_no, $priority){
+		$add_bug_controller = new add_bug_controller();
+		$result = $add_bug_controller->validate_bug_report($base, $reporter_id, $title, $description, $keyword, $version_no, $priority);
+		if($result==1){
+		die("<p class='alert success'>Success ! bug have been added !</p><br><center><a href='add_bug_page.php'>add another bug</a> - <a href='bug_report_list_page.php'>bug list</a></center>"); 
+		}
+		else{
+			echo "<p class='alert error'><b>Attention !</b> error</p>";
+		}
+	}
+
+	}
+	  if (isset($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == "Reporter" ) {
           ///
         }else{

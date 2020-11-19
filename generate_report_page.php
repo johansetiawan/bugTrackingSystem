@@ -2,6 +2,27 @@
           $title="report";
           include('include/head.php'); 
 include('include/content/generate_report_controller.php');
+	class generate_report_page{
+	public function generate_best_developer($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_best_developer($base);
+	}
+	
+	public function generate_best_reporter($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_best_reporter($base);
+	}
+	
+	public function generate_no_of_bugs_reported_monthly($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_no_of_bugs_reported_monthly($base);		
+	}
+	
+	public function generate_no_of_bugs_reports_resolved_weekly($base){
+		$generate_report_controller = new generate_report_controller();
+		return $generate_report_controller->get_no_of_bugs_reports_resolved_weekly($base);		
+	}
+}
 	$generate_report_page = new generate_report_page();
 	$dev = $generate_report_page->generate_best_developer($base);
 	$mon=$generate_report_page->generate_no_of_bugs_reported_monthly($base);

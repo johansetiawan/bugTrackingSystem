@@ -3,6 +3,21 @@
           include('include/head.php'); 
 include('include/content/register_controller.php');
 
+class register_page{
+
+public function register_user($base,$email,$password,$full_name,$user_type,$repassword){
+	$register_controller = new register_controller();
+	$result = $register_controller->validate_user_info($base,$email, $password,$full_name,$user_type,$repassword);
+	if($result==1){
+		die("<p class='alert success'>Account created</p><br><center><a href='login_page.php'>Login</a> - <a href='index.php'>Home</a></center>");
+	}
+	else{
+		echo "<p class='alert error'><b>Attention !</b> password field and confirm password field are not the same or email already exists</p>";
+	}
+}
+	
+}
+
 
   if (isset($_SESSION['user'])) {
         header('Location: index.php');

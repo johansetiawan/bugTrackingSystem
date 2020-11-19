@@ -1,6 +1,5 @@
 <?php
-
-include('classes.php');
+include ('include/content/Entity/user.php');
 
 class home_controller{
 		

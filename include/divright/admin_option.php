@@ -1,4 +1,4 @@
-<?php require_once __DIR__.'/../content/classes.php';?>
+
 
 <?php
 	function logout() {

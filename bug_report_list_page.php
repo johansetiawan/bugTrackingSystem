@@ -3,7 +3,45 @@
 					include('include/head.php'); 
 include('include/content/bug_report_list_controller.php');
 $allproduit ="";
-
+ 
+class bug_report_list_page{
+	
+	public function display_bug_reports($base){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_reports($base);    		
+	}
+	
+	public function search_bug_report_by_keyword($base,$keyword){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_keyword($base,$keyword);    		
+	}
+	
+	public function search_bug_report_by_status($base,$status){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_status($base,$status);    		
+	}
+	
+	public function search_bug_report_by_title($base,$title){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_title($base,$title);    		
+	}
+	
+	public function search_bug_report_by_assignee($base,$assignee){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->get_bug_report_by_assignee($base,$assignee);    		
+	}
+	
+	public function find_bug_reports_assigned_to_me($base,$developer_id){
+		$bug_report_list_controller = new bug_report_list_controller(); 
+		return $bug_report_list_controller->find_bug_reports_assigned_to_me($base,$developer_id);    		
+	}
+	
+	public function delete_bug_report($base,$bug_report_id){
+		$bug_report_list_controller = new bug_report_list_controller();
+		$bug_report_list_controller->remove_bug_report($base,$bug_report_id);
+	}
+			
+}
 $bug_report_list_page=new bug_report_list_page();
 
 if (isset($_SESSION['user'])) {

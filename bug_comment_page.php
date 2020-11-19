@@ -1,7 +1,24 @@
 ﻿			<?php 
                      include('config.php');
 include('include/content/bug_comment_controller.php');
-                    if (isset($_GET['num'])) {
+class bug_comment_page{
+	public function comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created){
+	$bug_comment_controller = new bug_comment_controller();
+	$result = $bug_comment_controller->set_comment($base,$comment_id,$user_id,$bug_report_id,$comment,$ts_created);
+	if($result==1){
+		echo "<meta http-equiv='refresh' content='0'>";
+	}
+	else{
+		echo "<p class='alert error'><b>Attention !</b> error</p>";
+	}
+	}
+	
+	public function display_comments($base,$bug_id){
+		$bug_comment_controller = new bug_comment_controller($base,$bug_id);
+		return $bug_comment_controller->get_comments($base,$bug_id);	
+	}	
+}
+					if (isset($_GET['num'])) {
                         $idproduit = $_GET['num'];
                         $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$idproduit."'";
                         $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
@@ -12,8 +29,7 @@ include('include/content/bug_comment_controller.php');
                         header('Location: bug_report_list_page.php');
                     }
 
-            ?> 
-			<?php 
+
 					$title="Roger Bug Tracker - ".$dataproduit['title'];
 					include('include/head.php');
 

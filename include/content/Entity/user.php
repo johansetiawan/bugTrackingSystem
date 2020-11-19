@@ -122,7 +122,7 @@ public function delete_user_from_user_list($user_id)
 		if (!empty($email) && !empty($password)) {
               //echo $_POST['descproduit'].'<hr>'.$descproduit; 
               $editpro = "UPDATE user SET email='$email',PASSWORD='$password' WHERE user_id='$user_id'";
-              echo "<p class='alert error'><b>Attention !</b> $editpro</p>";
+              //
              //die($editpro);
               $rq = mysqli_query($base,$editpro);
 

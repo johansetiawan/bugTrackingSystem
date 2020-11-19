@@ -13,7 +13,20 @@ if (isset($_SESSION['user'])) {
       }else{
         header('Location: login_page.php');
       }
-	  
+	  class home_page{
+	
+	public function display_user_details($base,$user_id){
+		$home_controller = new home_controller();
+		return $home_controller->get_user_details($base,$user_id);
+	}
+	
+	public function log_out()
+	{
+		 $home_controller = new home_controller();
+		 $home_controller->end_session();
+	}
+	
+}
 	  $user_id = $_SESSION['user']['user_id'];
 	  $home_page = new home_page();
 	  $datauser=$home_page->display_user_details($base,$user_id);

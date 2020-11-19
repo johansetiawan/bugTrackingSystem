@@ -1,5 +1,12 @@
 ﻿			<?php 	 include('include/content/user_list_controller.php');
-                     include('config.php');  
+                     include('config.php');
+					
+					class user_list_page{
+						public function delete_user($base,$user_id){
+						$user_list_controller = new user_list_controller();
+						$user_list_controller->find_and_delete_user($base,$user_id);
+						}	
+					}
                       if (isset($_SESSION['user'])) {
                         if ($_SESSION['user']['user_type'] == "admin") { 
 

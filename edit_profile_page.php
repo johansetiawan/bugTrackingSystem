@@ -6,7 +6,18 @@
         ///  
       }else{  
           header('Location:login_page.php');
-      } 
+      }
+class edit_profile_page{
+	public function edit_profile($base,$user_id,$email,$password){
+	$edit_profile_controller = new edit_profile_controller();
+	$result = $edit_profile_controller->change_profile_details($base,$user_id,$email,$password);
+	if($result==1){
+	echo "<p class='alert success'>Profile Updated Successfully!</p>";
+         }else{
+          echo "<p class='alert error'><b>Attention !</b> put something ah sial</p>";
+        }
+	}
+}
 	  $edit_profile_page = new edit_profile_page();
       if (isset($_POST['submit'])) {
         
