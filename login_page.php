@@ -35,11 +35,6 @@ include('include/content/login_controller.php');
 		
 	}
 
-	 
-	public function redirect_login()
-	{
-		header("location:login_page.php?logout=true");
-	}
  }
 
 		$login_page = new login_page($base);

@@ -1,5 +1,5 @@
 <?php
-include "classes.php";
+include('Entity/bug_report.php');
 
 
 
@@ -33,7 +33,7 @@ class bug_report_list_controller{
 		return $bug_report->retrieve_bug_report_by_assignee($base,$assignee);
 	}
 	
-	public function find_bug_reports_assigned_to_me($base,$developer_id){
+	public function get_bug_reports_assigned_to_me($base,$developer_id){
 		$bug_report = new bug_report($base,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 		return $bug_report->retrieve_all_bug_report_assigned_to_me($base,$developer_id); 		
 	}

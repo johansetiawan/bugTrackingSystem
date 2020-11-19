@@ -33,7 +33,7 @@ class bug_report_list_page{
 	
 	public function find_bug_reports_assigned_to_me($base,$developer_id){
 		$bug_report_list_controller = new bug_report_list_controller(); 
-		return $bug_report_list_controller->find_bug_reports_assigned_to_me($base,$developer_id);    		
+		return $bug_report_list_controller->get_bug_reports_assigned_to_me($base,$developer_id);    		
 	}
 	
 	public function delete_bug_report($base,$bug_report_id){

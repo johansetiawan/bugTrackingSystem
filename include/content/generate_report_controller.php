@@ -1,6 +1,8 @@
 <?php
-    include("classes.php");
-
+    include('Entity/bug_report.php');
+include('Entity/user.php');
+    include('Entity/user_developer.php');
+    include('Entity/user_reporter.php');
 
 
 

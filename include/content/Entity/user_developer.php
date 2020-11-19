@@ -14,7 +14,7 @@ function __construct($base,$user_id,$email,$password,$full_name,$user_type)
 	$this->user_type = $user_type;
 }
 
-public function get_no_of_bug_report_fixedl(){
+public function get_no_of_bug_report_fixed(){
 	return $this->bug_report_fixed;
 }
 

@@ -189,13 +189,6 @@ public function retrieve_all_bug_report_assigned_to_me($base,$developer_id){
 		return $produits;
 }
 
-public function remove_bug_report_from_database($base,$bug_report_id){	
-    $data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$bug_report_id."'";
-    $dataproduit = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-    if (!empty($dataproduit)) {
-        $base->query("DELETE FROM bug_report WHERE bug_id=".$bug_report_id."");
-    } 
-}
 
 public function bug_report_details($base,$bug_report_id){
 	$data = "SELECT * FROM `bug_report` WHERE `bug_id` LIKE '".$bug_report_id."'";

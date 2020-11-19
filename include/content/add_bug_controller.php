@@ -1,5 +1,5 @@
 <?php
-	  include "classes.php";
+	  include('Entity/bug_report.php');
 
 
 

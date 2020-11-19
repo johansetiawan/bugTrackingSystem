@@ -1,13 +1,12 @@
 <?php
-include ('include/content/Entity/user.php');
+include('Entity/user.php');
 
 class home_controller{
 		
 	public function end_session()
 	{
 		 session_destroy();
-		 $login_page = new login_page(NULL);
-		 $login_page->redirect_login();
+		 header("location:login_page.php?logout=true");
 	}
 	
 	public function get_user_details($base,$user_id){		

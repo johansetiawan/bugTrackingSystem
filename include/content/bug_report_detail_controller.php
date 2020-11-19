@@ -1,6 +1,6 @@
 
   <?php
-    include("classes.php");
+    include('Entity/bug_report.php');
 
 class bug_report_detail_controller{
 	

@@ -1,9 +1,6 @@
 
   <?php
-      include("classes.php");
-
-
-
+include('Entity/user.php');
 
 class edit_profile_controller{
 	public function change_profile_details($base,$user_id,$email,$password){
