@@ -101,6 +101,9 @@ public function delete_user_from_user_list($user_id)
               $numLOGIN = $result->fetch_row(); 			  
               if ($numLOGIN['0'] == 1) {				  
                   if ($password == $user_password) {
+					$data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
+					$datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
+					$_SESSION['user'] = $datauser;
 					return 1;					
                     }else{
                         return 0;

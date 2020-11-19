@@ -47,47 +47,11 @@ use PHPUnit\Framework\TestCase;
 			$expected=1;
 			$this->assertSame($expected,$result);
         }	
-				
-        public function test_logout(){
-            $test_user=new home_page();
-            $result = $test_user->log_out();
-			$expected=1;
-			$this->assertSame($expected,$result);
-        }
-		
+						
 		
 	}
 	
-	
-class home_page{
-	
-	public function display_user_details($base,$user_id){
-		$home_controller = new home_controller();
-		return $home_controller->get_user_details($base,$user_id);
-	}
-	
-	public function log_out()
-	{
-		 $home_controller = new home_controller();
-		 return $home_controller->end_session();         
-	}
-	
-	public function redirect_home($base,$email)
-	{
-		$data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
-        $datauser = $base->query($data)->fetch_array(MYSQLI_ASSOC);
-        $_SESSION['user'] = $datauser;
-        if ($_SESSION['user']['user_type'] == "Reporter") {
-              header('Location: admin.php');
-        }else{
-              header('Location: user.php');
-        }		
-	}
-	
-	
-}    
-
-
+	  
 class home_controller{
 		
 	public function end_session()

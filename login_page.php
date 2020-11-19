@@ -17,9 +17,6 @@ include('include/content/login_controller.php');
 		if (!empty($email) && !empty($password)) {
         $result = $login_controller->verify_login($email,$password); 
 		if($result==1){
-		$data = "SELECT * FROM `user` WHERE `email` LIKE '".$email."'";
-        $datauser = $this->base->query($data)->fetch_array(MYSQLI_ASSOC);
-        $_SESSION['user'] = $datauser;
         if ($_SESSION['user']['user_type'] == "Reporter") {
               header('Location: home_page.php');
         }else{
