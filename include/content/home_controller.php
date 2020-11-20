@@ -8,5 +8,11 @@ class home_controller{
 		return $user->retrieve_user_details($base,$user_id);
 	}
 	
+	public function end_session()
+	{
+		 session_destroy();
+		 header("location:login_page.php?logout=true");
+	}
+	
 }
 ?>

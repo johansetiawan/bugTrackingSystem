@@ -10,6 +10,11 @@ class home_page{
 		return $home_controller->get_user_details($base,$user_id);
 	}
 	
+	public function log_out()
+	{
+		 $home_controller = new home_controller();
+		 $home_controller->end_session();
+	}
 }
 $user_id = $_SESSION['user']['user_id'];
 $home_page = new home_page();
